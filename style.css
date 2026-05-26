@@ -153,16 +153,21 @@ a { text-decoration: none; color: inherit; }
   border-top: 1px solid var(--border);
 }
 
-/* ── VISUALIZATION BLOCK ──────────────────────── */
 .viz-block {
   background: var(--navy-light);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  min-height: 420px;
+
+  min-height: 600px;
+  padding: 28px 28px 24px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+
   margin: 2rem 0 0.75rem;
+
+  overflow: visible;
 }
 
 .viz-placeholder {
@@ -295,7 +300,13 @@ a { text-decoration: none; color: inherit; }
 .mode-btn:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
 .mode-btn.active { background: var(--accent); border-color: var(--accent); color: var(--navy); }
 
-.slider-row { display: flex; align-items: center; gap: 16px; }
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  margin-bottom: 12px; /* ⬅️ gives breathing room before chart */
+}
 
 .slider-label {
   font-size: 12px;
@@ -351,8 +362,11 @@ input[type=range]::-moz-range-thumb {
   background: var(--navy-mid);
   border: 1px solid var(--border);
   border-radius: 6px;
+
   padding: 28px 20px 20px;
   position: relative;
+
+  margin-top: 28px; /* ⬅️ adds separation from slider/year row */
 }
 
 .chart-stat { position: absolute; top: 24px; right: 28px; text-align: right; }
@@ -451,3 +465,44 @@ input[type=range]::-moz-range-thumb {
     font-size: 12px;
     color: rgba(255,255,255,0.55);
   }
+
+.year-display,
+#year-display,
+#active-year-stat,
+.slider-label {
+  font-family: Georgia, serif;
+}
+#year-display {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+
+  color: var(--accent);
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(200, 150, 62, 0.35);
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  display: inline-block;
+
+  line-height: 1;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
+.year-pill {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  color: var(--accent);
+  background: rgba(200,150,62,0.12);
+  border: 1px solid rgba(200,150,62,0.35);
+  padding: 6px 12px;
+  border-radius: 999px;
+  line-height: 1;
+}

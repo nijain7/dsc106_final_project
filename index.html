@@ -17,7 +17,7 @@
       <h1 class="article-title">NYC Public Transportation</h1>
       <p class="article-sub">Exploration of the details, history, and effectiveness of New York City's MTA public transportation.</p>
       <div class="article-meta">
-        <span>By, Nikita, Irina, Natalie</span>
+        <span>By: Nikita, Irina, Natalie</span>
         <span class="meta-dot">·</span>
       </div>
     </div>
@@ -55,11 +55,23 @@
           <div class="mode-buttons" id="mode-buttons"></div>
           <div class="slider-row">
             <span class="slider-label">Year</span>
-            <input type="range" id="year-slider" min="2020" max="2024" step="1" value="2024" />
+
+            <span class="slider-bound" id="slider-min">2008</span>
+
+            <input
+              type="range"
+              id="year-slider"
+              min="2008"
+              max="2026"
+              step="1"
+              value="2024"
+            />
+
+            <span class="slider-bound" id="slider-max">2026</span>
+
             <span class="year-display" id="year-display">2024</span>
           </div>
         </div>
-
         <div class="chart-container">
           <div class="chart-stat">
             <div class="chart-stat-num" id="annual-total">—</div>
@@ -127,10 +139,10 @@
       </nav>
     </div>
   </footer>
-
 <script>
 const AGENCIES = ['Subway','Bus','NYCT Bus','MTA Bus','LIRR','MNR','AAR','BT','B&T','SIR'];
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
 const COLORS = {
   'Subway':   '#c8963e',
   'Bus':      '#4a9eca',
@@ -144,225 +156,601 @@ const COLORS = {
   'SIR':      '#d4a0c8',
 };
 
-let allData = [], activeAgency = 'Subway', activeYear = 2024;
-let globalMax = 0, chartBuilt = false;
+let allData = [],
+    activeAgency = 'Subway',
+    activeYear = 2024;
+
+let globalMax = 0,
+    chartBuilt = false;
+
+let agencyYearRanges = {};
+
 let svg, xScale, yScale, lineGen, areaGen;
+
 const margin = { top: 20, right: 20, bottom: 36, left: 64 };
 const height = 340 - margin.top - margin.bottom;
 
-// All button
+// =========================
+// BUTTONS
+// =========================
+
 const btnContainer = document.getElementById('mode-buttons');
+
+// ALL button
 const allBtn = document.createElement('button');
+
 allBtn.className = 'mode-btn';
 allBtn.textContent = 'All';
+
 allBtn.addEventListener('click', () => {
   activeAgency = 'ALL';
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+
+  document.querySelectorAll('.mode-btn')
+    .forEach(b => b.classList.remove('active'));
+
   allBtn.classList.add('active');
+
+  updateSliderRange();
   updateGlobalMax();
   render();
 });
+
 btnContainer.appendChild(allBtn);
 
 // Agency buttons
 AGENCIES.forEach(agency => {
   const btn = document.createElement('button');
-  btn.className = 'mode-btn' + (agency === activeAgency ? ' active' : '');
+
+  btn.className =
+    'mode-btn' + (agency === activeAgency ? ' active' : '');
+
   btn.textContent = agency;
+
   btn.addEventListener('click', () => {
     activeAgency = agency;
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+
+    document.querySelectorAll('.mode-btn')
+      .forEach(b => b.classList.remove('active'));
+
     btn.classList.add('active');
+
+    updateSliderRange();
     updateGlobalMax();
     render();
   });
+
   btnContainer.appendChild(btn);
 });
 
-// Slider
+// =========================
+// SLIDER
+// =========================
+
 const slider = document.getElementById('year-slider');
 const yearDisplay = document.getElementById('year-display');
+
 slider.addEventListener('input', () => {
   activeYear = +slider.value;
   yearDisplay.textContent = activeYear;
   render();
 });
 
-// Load CSV
-d3.csv("data/MTA_Monthly_Ridership___Traffic_Data__Beginning_January_2008_20260517.csv", d => {
-  const date = new Date(d.Month);
-  return {
-    date, year: date.getFullYear(), month: date.getMonth(),
-    agency: d.Agency ? d.Agency.trim() : '',
-    ridership: +String(d.Ridership).replace(/,/g, '') || 0
+// =========================
+// LOAD CSV
+// =========================
+
+d3.csv(
+  "data/MTA_Monthly_Ridership___Traffic_Data__Beginning_January_2008_20260517.csv",
+  d => {
+    const date = new Date(d.Month);
+
+    return {
+      date,
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      agency: d.Agency ? d.Agency.trim() : '',
+      ridership: +String(d.Ridership).replace(/,/g, '') || 0
+    };
+  }
+).then(parsed => {
+
+  allData = parsed.filter(
+    d => !isNaN(d.date) && d.ridership > 0
+  );
+
+  // Build year ranges for each agency
+  AGENCIES.forEach(agency => {
+
+    const agencyYears = allData
+      .filter(d => d.agency === agency)
+      .map(d => d.year);
+
+    if (agencyYears.length) {
+      agencyYearRanges[agency] = {
+        min: d3.min(agencyYears),
+        max: d3.max(agencyYears)
+      };
+    }
+  });
+
+  // ALL range
+  const allYears = allData.map(d => d.year);
+
+  agencyYearRanges['ALL'] = {
+    min: d3.min(allYears),
+    max: d3.max(allYears)
   };
-}).then(parsed => {
-  allData = parsed.filter(d => !isNaN(d.date) && d.ridership > 0);
-  const years = [...new Set(allData.map(d => d.year))].sort();
-  slider.min = years[0]; slider.max = years[years.length-1];
-  activeYear = years[years.length-1];
-  slider.value = activeYear;
-  yearDisplay.textContent = activeYear;
-  updateGlobalMax(); buildChart(); render();
+
+  activeYear = agencyYearRanges['Subway'].max;
+
+  updateSliderRange();
+  updateGlobalMax();
+  buildChart();
+  render();
 });
 
+// =========================
+// HELPERS
+// =========================
+
+function updateSliderRange() {
+
+  const range =
+    agencyYearRanges[activeAgency] ||
+    agencyYearRanges['ALL'];
+
+  slider.min = range.min;
+  slider.max = range.max;
+
+  // IMPORTANT: update visible range labels
+  const minLabel = document.getElementById('slider-min');
+  const maxLabel = document.getElementById('slider-max');
+
+  if (minLabel) minLabel.textContent = range.min;
+  if (maxLabel) maxLabel.textContent = range.max;
+
+  // Clamp year into valid range
+  if (activeYear < range.min) {
+    activeYear = range.min;
+  }
+
+  if (activeYear > range.max) {
+    activeYear = range.max;
+  }
+
+  slider.value = activeYear;
+  yearDisplay.textContent = activeYear;
+}
+
 function updateGlobalMax() {
+
   if (activeAgency === 'ALL') {
-    globalMax = d3.max(allData, d => d.ridership) || 1;
+
+    globalMax =
+      d3.max(allData, d => d.ridership) || 1;
+
   } else {
-    globalMax = d3.max(allData.filter(d => d.agency === activeAgency), d => d.ridership) || 1;
+
+    globalMax =
+      d3.max(
+        allData.filter(d => d.agency === activeAgency),
+        d => d.ridership
+      ) || 1;
   }
 }
 
+// =========================
+// BUILD CHART
+// =========================
+
 function buildChart() {
+
   document.getElementById('chart').innerHTML = '';
-  const W = document.querySelector('.viz-block').clientWidth - 40;
-  const innerW = W - margin.left - margin.right;
-  svg = d3.select('#chart').append('svg').attr('viewBox', `0 0 ${W} 340`).attr('width', W).attr('height', 340);
+
+  const W =
+    document.querySelector('.viz-block').clientWidth - 40;
+
+  const innerW =
+    W - margin.left - margin.right;
+
+  svg = d3.select('#chart')
+    .append('svg')
+    .attr('viewBox', `0 0 ${W} 340`)
+    .attr('width', W)
+    .attr('height', 340);
+
   const defs = svg.append('defs');
-  const grad = defs.append('linearGradient').attr('id','areaGradient').attr('x1','0').attr('y1','0').attr('x2','0').attr('y2','1');
-  grad.append('stop').attr('offset','0%').attr('stop-color','#c8963e').attr('stop-opacity',0.25);
-  grad.append('stop').attr('offset','100%').attr('stop-color','#c8963e').attr('stop-opacity',0.02);
-  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-  xScale = d3.scalePoint().domain(MONTH_NAMES).range([0, innerW]).padding(0.1);
-  yScale = d3.scaleLinear().domain([0, globalMax * 1.08]).range([height, 0]);
-  g.append('g').attr('class','grid').call(d3.axisLeft(yScale).ticks(5).tickSize(-innerW).tickFormat(''));
-  g.append('g').attr('class','axis').attr('transform',`translate(0,${height})`).call(d3.axisBottom(xScale).tickSize(0).tickPadding(10));
-  g.append('g').attr('class','axis y-axis').call(d3.axisLeft(yScale).ticks(5).tickFormat(d => d >= 1e6 ? (d/1e6).toFixed(1)+'M' : d >= 1e3 ? (d/1e3).toFixed(0)+'K' : d));
-  lineGen = d3.line().x(d => xScale(MONTH_NAMES[d.month])).y(d => yScale(d.ridership)).curve(d3.curveCatmullRom.alpha(0.5));
-  areaGen = d3.area().x(d => xScale(MONTH_NAMES[d.month])).y0(height).y1(d => yScale(d.ridership)).curve(d3.curveCatmullRom.alpha(0.5));
-  g.append('path').attr('class','area-path').attr('id','area-path');
-  g.append('path').attr('class','line-path').attr('id','line-path');
-  g.append('g').attr('id','dots-group');
+
+  const grad = defs.append('linearGradient')
+    .attr('id','areaGradient')
+    .attr('x1','0')
+    .attr('y1','0')
+    .attr('x2','0')
+    .attr('y2','1');
+
+  grad.append('stop')
+    .attr('offset','0%')
+    .attr('stop-color','#c8963e')
+    .attr('stop-opacity',0.25);
+
+  grad.append('stop')
+    .attr('offset','100%')
+    .attr('stop-color','#c8963e')
+    .attr('stop-opacity',0.02);
+
+  const g = svg.append('g')
+    .attr(
+      'transform',
+      `translate(${margin.left},${margin.top})`
+    );
+
+  xScale = d3.scalePoint()
+    .domain(MONTH_NAMES)
+    .range([0, innerW])
+    .padding(0.1);
+
+  yScale = d3.scaleLinear()
+    .domain([0, globalMax * 1.08])
+    .range([height, 0]);
+
+  g.append('g')
+    .attr('class','grid')
+    .call(
+      d3.axisLeft(yScale)
+        .ticks(5)
+        .tickSize(-innerW)
+        .tickFormat('')
+    );
+
+  g.append('g')
+    .attr('class','axis')
+    .attr('transform',`translate(0,${height})`)
+    .call(
+      d3.axisBottom(xScale)
+        .tickSize(0)
+        .tickPadding(10)
+    );
+
+  g.append('g')
+    .attr('class','axis y-axis')
+    .call(
+      d3.axisLeft(yScale)
+        .ticks(5)
+        .tickFormat(d =>
+          d >= 1e6
+            ? (d/1e6).toFixed(1)+'M'
+            : d >= 1e3
+            ? (d/1e3).toFixed(0)+'K'
+            : d
+        )
+    );
+
+  lineGen = d3.line()
+    .x(d => xScale(MONTH_NAMES[d.month]))
+    .y(d => yScale(d.ridership))
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  areaGen = d3.area()
+    .x(d => xScale(MONTH_NAMES[d.month]))
+    .y0(height)
+    .y1(d => yScale(d.ridership))
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  g.append('path')
+    .attr('class','area-path')
+    .attr('id','area-path');
+
+  g.append('path')
+    .attr('class','line-path')
+    .attr('id','line-path');
+
+  g.append('g')
+    .attr('id','dots-group');
+
   chartBuilt = true;
 }
 
+// =========================
+// RENDER
+// =========================
+
 function render() {
+
   if (!chartBuilt) return;
 
   const g = svg.select('g');
+
   yScale.domain([0, globalMax * 1.08]);
+
   d3.select('.y-axis').call(
-    d3.axisLeft(yScale).ticks(5).tickFormat(d =>
-      d >= 1e6 ? (d/1e6).toFixed(1)+'M' : d >= 1e3 ? (d/1e3).toFixed(0)+'K' : d
-    )
+    d3.axisLeft(yScale)
+      .ticks(5)
+      .tickFormat(d =>
+        d >= 1e6
+          ? (d/1e6).toFixed(1)+'M'
+          : d >= 1e3
+          ? (d/1e3).toFixed(0)+'K'
+          : d
+      )
   );
 
   g.selectAll('.agency-line-group').remove();
+
   d3.select('#legend').remove();
 
-  if (activeAgency === 'ALL') {
-    d3.select('#line-path').attr('d', null);
-    d3.select('#area-path').attr('d', null);
-    d3.select('#dots-group').selectAll('circle').remove();
-    document.getElementById('annual-total').textContent = '—';
+// =========================
+// ALL MODE
+// =========================
 
-    AGENCIES.forEach(agency => {
-      const yearData = allData
-        .filter(d => d.agency === agency && d.year === activeYear)
-        .sort((a, b) => a.month - b.month);
-      if (!yearData.length) return;
+if (activeAgency === 'ALL') {
 
-      const agGroup = g.append('g').attr('class','agency-line-group');
-      agGroup.append('path')
-        .datum(yearData)
-        .attr('fill','none')
-        .attr('stroke', COLORS[agency] || '#fff')
-        .attr('stroke-width', 2)
-        .attr('stroke-linecap','round')
-        .attr('stroke-linejoin','round')
-        .attr('d', lineGen);
+  d3.select('#line-path').attr('d', null);
+  d3.select('#area-path').attr('d', null);
 
-      agGroup.selectAll('circle')
-        .data(yearData)
-        .enter().append('circle')
-        .attr('r', 3.5)
-        .attr('cx', d => xScale(MONTH_NAMES[d.month]))
-        .attr('cy', d => yScale(d.ridership))
-        .attr('fill', COLORS[agency] || '#fff')
-        .attr('stroke', '#112236')
-        .attr('stroke-width', 1.5)
-        .on('mouseover', function(event, d) {
-          d3.select(this).attr('r', 6);
-          const tt = document.getElementById('tooltip');
-          document.getElementById('tt-month').textContent = agency + ' · ' + MONTH_NAMES[d.month] + ' ' + d.year;
-          document.getElementById('tt-val').textContent = d.ridership.toLocaleString() + ' riders';
-          tt.style.opacity = 1;
-          const rect = document.querySelector('.chart-container').getBoundingClientRect();
-          tt.style.left = (event.clientX - rect.left + 12) + 'px';
-          tt.style.top  = (event.clientY - rect.top  - 36) + 'px';
-        })
-        .on('mousemove', function(event) {
-          const rect = document.querySelector('.chart-container').getBoundingClientRect();
-          const tt = document.getElementById('tooltip');
-          tt.style.left = (event.clientX - rect.left + 12) + 'px';
-          tt.style.top  = (event.clientY - rect.top  - 36) + 'px';
-        })
-        .on('mouseout', function() {
-          d3.select(this).attr('r', 3.5);
-          document.getElementById('tooltip').style.opacity = 0;
-        });
-    });
+  d3.select('#dots-group')
+    .selectAll('circle')
+    .remove();
 
-    const legend = d3.select('.chart-container').append('div').attr('id','legend');
-    AGENCIES.forEach(agency => {
-      const item = legend.append('div').attr('class','legend-item');
-      item.append('span').attr('class','legend-dot').style('background', COLORS[agency] || '#fff');
-      item.append('span').attr('class','legend-label').text(agency);
-    });
+  const yearlyTotal = d3.sum(
+    allData.filter(d => d.year === activeYear),
+    d => d.ridership
+  );
 
-  } else {
+  const totalEl = document.getElementById('annual-total');
+
+  if (totalEl) {
+    totalEl.textContent =
+      yearlyTotal >= 1e9
+        ? (yearlyTotal / 1e9).toFixed(2) + 'B total riders'
+        : yearlyTotal >= 1e6
+        ? (yearlyTotal / 1e6).toFixed(1) + 'M total riders'
+        : yearlyTotal.toLocaleString() + ' total riders';
+  }
+
+  // =========================
+  // RENDER EACH AGENCY LINE
+  // =========================
+
+  AGENCIES.forEach(agency => {
+
     const yearData = allData
-      .filter(d => d.agency === activeAgency && d.year === activeYear)
+      .filter(d =>
+        d.agency === agency &&
+        d.year === activeYear
+      )
+      .sort((a, b) => a.month - b.month);
+
+    if (!yearData.length) return;
+
+    const agGroup = g.append('g')
+      .attr('class','agency-line-group');
+
+    agGroup.append('path')
+      .datum(yearData)
+      .attr('fill','none')
+      .attr('stroke', COLORS[agency] || '#fff')
+      .attr('stroke-width', 2)
+      .attr('stroke-linecap','round')
+      .attr('stroke-linejoin','round')
+      .attr('d', lineGen);
+
+    agGroup.selectAll('circle')
+      .data(yearData)
+      .enter()
+      .append('circle')
+      .attr('r', 3.5)
+      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
+      .attr('cy', d => yScale(d.ridership))
+      .attr('fill', COLORS[agency] || '#fff')
+      .attr('stroke', '#112236')
+      .attr('stroke-width', 1.5)
+
+      .on('mouseover', function(event, d) {
+
+        d3.select(this).attr('r', 6);
+
+        const tt = document.getElementById('tooltip');
+
+        document.getElementById('tt-month')
+          .textContent =
+            agency +
+            ' · ' +
+            MONTH_NAMES[d.month] +
+            ' ' +
+            d.year;
+
+        document.getElementById('tt-val')
+          .textContent =
+            d.ridership.toLocaleString() +
+            ' riders';
+
+        tt.style.opacity = 1;
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
+      })
+
+      .on('mousemove', function(event) {
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        const tt = document.getElementById('tooltip');
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
+      })
+
+      .on('mouseout', function() {
+
+        d3.select(this).attr('r', 3.5);
+
+        document.getElementById('tooltip')
+          .style.opacity = 0;
+      });
+  });
+
+  const legend = d3.select('.chart-container')
+    .append('div')
+    .attr('id','legend');
+
+  AGENCIES.forEach(agency => {
+
+    const item = legend.append('div')
+      .attr('class','legend-item');
+
+    item.append('span')
+      .attr('class','legend-dot')
+      .style('background', COLORS[agency] || '#fff');
+
+    item.append('span')
+      .attr('class','legend-label')
+      .text(agency);
+  });
+}
+
+  // =========================
+  // SINGLE AGENCY MODE
+  // =========================
+
+  else {
+
+    const yearData = allData
+      .filter(
+        d =>
+          d.agency === activeAgency &&
+          d.year === activeYear
+      )
       .sort((a, b) => a.month - b.month);
 
     if (!yearData.length) {
+
       d3.select('#line-path').attr('d', null);
+
       d3.select('#area-path').attr('d', null);
-      d3.select('#dots-group').selectAll('circle').remove();
-      document.getElementById('annual-total').textContent = '—';
+
+      d3.select('#dots-group')
+        .selectAll('circle')
+        .remove();
+
+      document.getElementById('annual-total')
+        .textContent = '—';
+
       return;
     }
 
-    const total = d3.sum(yearData, d => d.ridership);
-    document.getElementById('annual-total').textContent =
-      total >= 1e9 ? (total/1e9).toFixed(2)+'B' :
-      total >= 1e6 ? (total/1e6).toFixed(1)+'M' :
-      total.toLocaleString();
+    const total =
+      d3.sum(yearData, d => d.ridership);
 
-    d3.select('#line-path').datum(yearData)
-      .transition().duration(300).ease(d3.easeCubicOut).attr('d', lineGen);
-    d3.select('#area-path').datum(yearData)
-      .transition().duration(300).ease(d3.easeCubicOut).attr('d', areaGen);
+    document.getElementById('annual-total')
+      .textContent =
+        total >= 1e9
+          ? (total/1e9).toFixed(2)+'B'
+          : total >= 1e6
+          ? (total/1e6).toFixed(1)+'M'
+          : total.toLocaleString();
 
-    const dots = d3.select('#dots-group').selectAll('circle').data(yearData, d => d.month);
-    dots.enter().append('circle').attr('class','dot').attr('r',4)
-      .attr('cx', d => xScale(MONTH_NAMES[d.month])).attr('cy', d => yScale(d.ridership))
+    d3.select('#line-path')
+      .datum(yearData)
+      .transition()
+      .duration(300)
+      .ease(d3.easeCubicOut)
+      .attr('d', lineGen);
+
+    d3.select('#area-path')
+      .datum(yearData)
+      .transition()
+      .duration(300)
+      .ease(d3.easeCubicOut)
+      .attr('d', areaGen);
+
+    const dots = d3.select('#dots-group')
+      .selectAll('circle')
+      .data(yearData, d => d.month);
+
+    dots.enter()
+      .append('circle')
+      .attr('class','dot')
+      .attr('r',4)
+      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
+      .attr('cy', d => yScale(d.ridership))
+
       .on('mouseover', function(event, d) {
+
         d3.select(this).attr('r', 6);
-        const tt = document.getElementById('tooltip');
-        document.getElementById('tt-month').textContent = MONTH_NAMES[d.month] + ' ' + d.year;
-        document.getElementById('tt-val').textContent = d.ridership.toLocaleString() + ' riders';
+
+        const tt =
+          document.getElementById('tooltip');
+
+        document.getElementById('tt-month')
+          .textContent =
+            MONTH_NAMES[d.month] +
+            ' ' +
+            d.year;
+
+        document.getElementById('tt-val')
+          .textContent =
+            d.ridership.toLocaleString() +
+            ' riders';
+
         tt.style.opacity = 1;
-        const rect = document.querySelector('.chart-container').getBoundingClientRect();
-        tt.style.left = (event.clientX - rect.left + 12) + 'px';
-        tt.style.top = (event.clientY - rect.top - 36) + 'px';
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
       })
+
       .on('mousemove', function(event) {
-        const rect = document.querySelector('.chart-container').getBoundingClientRect();
-        const tt = document.getElementById('tooltip');
-        tt.style.left = (event.clientX - rect.left + 12) + 'px';
-        tt.style.top = (event.clientY - rect.top - 36) + 'px';
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        const tt =
+          document.getElementById('tooltip');
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
       })
+
       .on('mouseout', function() {
+
         d3.select(this).attr('r', 4);
-        document.getElementById('tooltip').style.opacity = 0;
+
+        document.getElementById('tooltip')
+          .style.opacity = 0;
       })
-      .merge(dots).transition().duration(300).ease(d3.easeCubicOut)
-      .attr('cx', d => xScale(MONTH_NAMES[d.month])).attr('cy', d => yScale(d.ridership));
+
+      .merge(dots)
+
+      .transition()
+      .duration(300)
+      .ease(d3.easeCubicOut)
+
+      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
+      .attr('cy', d => yScale(d.ridership));
+
     dots.exit().remove();
   }
 }
 </script>
-</body>
-</html>
