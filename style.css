@@ -127,32 +127,44 @@ a { text-decoration: none; color: inherit; }
   padding: 64px 0 96px;
 }
 
+/* Global vertical rhythm (single spacing system) */
 .article-body .container > * + * {
-  margin-top: 1.5rem;
+  margin-top: 0.75rem;
 }
 
-.lead {
-  font-size: 19px;
-  font-weight: 300;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.75);
-}
-
+/* Paragraph styling */
 .article-body p {
   color: rgba(255,255,255,0.68);
+  margin: 0; /* important: remove default stacking conflicts */
 }
 
+/* Headings */
 .article-body h2 {
   font-family: 'Playfair Display', serif;
   font-size: 28px;
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.01em;
-  margin-top: 3rem;
-  padding-top: 3rem;
+
+  margin-top: 2.5rem;
+  margin-bottom: 0.25rem;
+
+  padding-top: 2rem;
   border-top: 1px solid var(--border);
 }
 
+/* Tighten h2 → paragraph spacing */
+.article-body h2 + p {
+  margin-top: 0.1rem;
+}
+
+/* Lead text */
+.lead {
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+}
 .viz-block {
   background: var(--navy-light);
   border: 1px solid var(--border);
@@ -165,7 +177,7 @@ a { text-decoration: none; color: inherit; }
   align-items: stretch;
   justify-content: flex-start;
 
-  margin: 2rem 0 0.75rem;
+  margin: 0.5rem 0 0.75rem; /* reduced top margin */
 
   overflow: visible;
 }
@@ -487,22 +499,5 @@ input[type=range]::-moz-range-thumb {
 
   display: inline-block;
 
-  line-height: 1;
-}
-
-.chart-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0;
-}
-
-.year-pill {
-  font-family: Georgia, serif;
-  font-size: 18px;
-  color: var(--accent);
-  background: rgba(200,150,62,0.12);
-  border: 1px solid rgba(200,150,62,0.35);
-  padding: 6px 12px;
-  border-radius: 999px;
   line-height: 1;
 }
