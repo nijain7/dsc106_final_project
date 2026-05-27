@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Article Title — YourBrand</title>
+  <title>Public City Transit Planning: Moving on the Metro</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
@@ -71,6 +71,10 @@
 
             <span class="year-display" id="year-display">2024</span>
           </div>
+          <div class="peak-row">
+            <button id="peak-btn" class="peak-btn">Jump to Peak Year</button>
+            <span id="peak-label" class="peak-label"></span>
+          </div>
         </div>
         <div class="chart-container">
           <div class="chart-stat">
@@ -91,21 +95,24 @@
         Figure 1: Annual ridership for each transit mode. Drag slider to view year.
       </p>
 
+      <div id="analysis-callout" class="analysis-callout" style="display:none;">
+        <span class="analysis-icon">📊</span>
+        <p id="analysis-text"></p>
+      </div>
+
       <div class="writeup">
 
     <h2>Current Progress</h2>
 
       <div class="callout">
-        <p>As of now, we have started with the first part of our datastory telling which 
-          is comparing different types of public transit. For the "All" tab, the chart
-          is stratified by transit mode and month, allowing the viewer to compare all modes 
-          for each corresponding year. While the viewer is given the ability to toggle between
-          each category, the purpose of the all tab is to show that in every year across almost
-          every month when subway system data starts being recorded, the subway has the highest
-          amount of riders. This would be essentially in highlighting to show why so much money is 
-          being allocated for the 5 year MTA capital plan in comparison to all transit systems.
-          Starting off with this plot allows for us to show the viewer why the subway system is the 
-          most essential form of transit, and later segue into larger takeaways.
+        <p>As of now, we have started with the first part of our data storytelling which is comparing different types of public transit. 
+          For the "All" tab, the chart is stratified by transit mode and month, allowing the viewer to compare all modes for each corresponding year. 
+          While the viewer is given the ability to toggle between each category, the purpose of the all tab is to show that in every year across almost every month when subway system data starts being recorded, the subway has the highest amount of riders. 
+          This would be essentially in highlighting to show why so much money is being allocated for the 5 year MTA capital plan in comparison to all transit systems. 
+          Starting off with this plot allows for us to show the viewer why the subway system is the most essential form of transit, and later segue into larger takeaways. 
+          We also added a Peak Year button that jumps the slider to the highest ridership year for whichever agency the user selects. 
+          This makes it easy to compare how different agencies peaked at different times. 
+          We also added callouts that now appear automatically for notable years; for example, when a viewer selects 2020, a callout explains the COVID-19 ridership collapse and its scale.
         </p>
       </div>
       <h2>Challenges</h2>
@@ -130,8 +137,8 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-inner">
-      <span class="logo">YourBrand</span>
-      <p>© 2024 YourBrand. All rights reserved.</p>
+      <span class="logo">Public City Transit Planning: Moving on the Metro</span>
+      <p>© 2026 DSC 106 Final Project. Nikita Jain, Irina Vardapetyan, Natalie Huynh.</p>
       <nav class="footer-links">
         <a href="#">Twitter</a>
         <a href="#">GitHub</a>
@@ -751,6 +758,77 @@ if (activeAgency === 'ALL') {
       .attr('cy', d => yScale(d.ridership));
 
     dots.exit().remove();
+    updateAnalysis()
+  }
+}
+
+// ── PEAK YEAR BUTTON ──
+function getPeakYear(agency) {
+  if (agency === 'ALL') {
+    // sum ridership across all agencies per year, find max
+    const byYear = d3.rollup(allData, v => d3.sum(v, d => d.ridership), d => d.year);
+    return [...byYear.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
+  }
+  const agencyData = allData.filter(d => d.agency === agency);
+  if (!agencyData.length) return null;
+  const byYear = d3.rollup(agencyData, v => d3.sum(v, d => d.ridership), d => d.year);
+  return [...byYear.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
+}
+
+document.getElementById('peak-btn').addEventListener('click', () => {
+  const peak = getPeakYear(activeAgency);
+  if (!peak) return;
+  activeYear = peak;
+  slider.value = peak;
+  yearDisplay.textContent = peak;
+  updateGlobalMax();
+  render();
+  const label = document.getElementById('peak-label');
+  label.textContent = `Peak year for ${activeAgency === 'ALL' ? 'all agencies' : activeAgency}: ${peak}`;
+});
+
+// CONTEXTUAL ANALYSIS for callouts
+const ANALYSIS = {
+  'ALL': {
+    2020: "By April 2020, the MTA experienced a 90% decrease in subway and bus ridership and a 95% decrease in commuter rail passengers. The MTA faced a cumulative $16.2 billion budget gap from 2020 through 2024 as a result of lost farebox revenue and $567M in unplanned COVID cleaning costs in 2020 alone. (Source: CBC Testimony, Denise Richardson)",
+    2019: "2019 was the last full pre-pandemic year. Use the Peak Year button on each agency to compare how far each mode's ridership still is from its pre-pandemic high.",
+    2022: "Even with ridership returning, the MTA projected a $1.8 billion structural gap even under a full ridership recovery scenario, meaning fare revenue alone could not close the deficit created by the pandemic.",
+    2025: "2025 represents the MTA's strongest post-pandemic ridership year in this dataset. Compare to 2019 using the Peak Year button to see how much ground has been recovered.",
+  },
+  'Subway': {
+    2020: "Subway ridership fell 90% by April 2020. The MTA estimated COVID-related cleaning costs of $567M in 2020, $591M in 2021, $518M in 2022, and $500M annually through 2024. (Source: CBC Testimony)",
+    2019: "2019 was the subway's peak year in this dataset. Drag the slider forward to watch the collapse in 2020 and the slow recovery through 2025.",
+    2025: "The MTA's 2025–2029 Capital Plan allocated $11.93B to passenger stations and $7.2B to subway cars, the ninth capital plan in MTA history.",
+  },
+  'Bus': {
+    2020: "Bus ridership dropped 90% alongside the subway in April 2020, though toll traffic was more resilient (only 15% below pre-pandemic levels at the same time), reflecting that essential drivers returned to roads faster than transit riders. (Source: CBC Testimony)",
+    2019: "2019 was the last full pre-pandemic year for bus ridership. Note that bus recovery post-2020 has been slower than subway recovery, which is visible by comparing their respective Peak Year readings.",
+  },
+  'LIRR': {
+    2020: "Commuter rail saw the steepest drop of any MTA mode: a 95% decrease in passengers by April 2020, compared to 90% for subway and bus. This reflects commuter rail's near-total dependence on Manhattan office trips. (Source: CBC Testimony)",
+  },
+  'MNR': {
+    2020: "Like the LIRR, Metro-North experienced a 95% ridership decline by April 2020. Toll traffic on bridges and tunnels recovered much faster, dropping only 15% at the same point. This stark contrast is visible across the agency tabs.",
+  },
+  'BT': {
+    2020: "Bridge and tunnel traffic fell 65% by April 2020, far less than the 90–95% drops seen on transit. By mid-2020, tolls were only 15% below pre-pandemic levels, making B&T the MTA's most financially resilient revenue source during the crisis. (Source: CBC Testimony)",
+  },
+};
+
+function updateAnalysis() {
+  const callout = document.getElementById('analysis-callout');
+  const textEl = document.getElementById('analysis-text');
+  const agencyNotes = ANALYSIS[activeAgency] || ANALYSIS['ALL'];
+  const note = agencyNotes?.[activeYear];
+  if (note) {
+    textEl.textContent = note;
+    callout.style.display = 'flex';
+    // re-trigger animation
+    callout.style.animation = 'none';
+    callout.offsetHeight; // reflow
+    callout.style.animation = '';
+  } else {
+    callout.style.display = 'none';
   }
 }
 </script>
