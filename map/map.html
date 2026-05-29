@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>NYC Subway Map</title>
+  <meta charset="utf-8" />
+  <title>NYC Subway Map</title>
 
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet"/>
+  <!-- Mapbox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 
-<style>
-body { margin: 0; }
-#map { width: 100vw; height: 100vh; }
-</style>
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="map.css">
 </head>
 
 <body>
 
-<div id="map"></div>
+  <!-- CENTERING WRAPPER -->
+  <div class="page">
+    <div id="map"></div>
+  </div>
 
-<script src="map.js"></script>
+  <!-- Your JS -->
+  <script src="map.js"></script>
 
 </body>
 </html>
