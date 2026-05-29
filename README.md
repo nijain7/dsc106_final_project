@@ -1,3 +1,4 @@
+```
 dsc106_final_project/
 │
 ├── index.html (main initial page)
@@ -24,3 +25,4 @@ dsc106_final_project/
 │   ├── stations.geojson
 │
 └── README.md
+```
