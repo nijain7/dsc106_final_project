@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Public City Transit Planning: Moving on the Metro</title>
+  <title>NYC Public Transportation</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://unpkg.com/scrollama"></script>
 </head>
 <body>
 
@@ -25,114 +26,487 @@
 
   <div class="article-divider"></div>
 
-  <!-- ARTICLE BODY -->
   <main class="article-body">
     <div class="container">
-
       <p class="lead">
-        The MTA's history in New York City is rooted in the developement of infrastructure that began in the 19th century.
-        Despite decades of barriers, including bankrupty and operational failure, the New York City's MTA system is still the busiest
+        The MTA's history in New York City is rooted in the development of infrastructure that began in the 19th century.
+        Despite decades of barriers, including bankruptcy and operational failure, New York City's MTA system is still the busiest
         rapid transit system in the Americas, carrying approximately 650 million riders annually. The following visualizations explore the history
         of the traffic of the MTA system, as well as recent key indicators of the effectiveness of the transit system today.
       </p>
-
       <p>
         In order to create these visualizations, we used the following public datasets provided by the MTA:
         <a href="https://data.ny.gov/Transportation/MTA-Monthly-Ridership-Traffic-Data-Beginning-Janua/xfre-bxip/about_data">MTA Monthly Ridership</a>,
         <a href="https://data.ny.gov/Transportation/MTA-Subway-Hourly-Ridership-Beginning-2025/5wq4-mkjj/about_data">MTA Subway Hourly Ridership</a>,
         <a href="https://data.ny.gov/Transportation/MTA-Pulse-Survey-Beginning-2025/5754-yujh/about_data">MTA Pulse Survey Beginning 2025</a>
       </p>
+    </div>
+  </main>
 
-      <h2>MTA Monthly Ridership from 2008 to 2026</h2>
+  <!-- ═══════════════════════════════════════
+       SECTION 3 — THE SUBWAY CARRIES EVERYONE
+  ════════════════════════════════════════ -->
+  <section class="story-section" id="section-subway">
 
-      <p>
-       Systemwide Ridership starting from 2008, recorded on a monthly basis.
-      </p>
-
-      <!-- VISUALIZATION -->
-      <div class="viz-block">
-        <div class="controls">
-          <div class="mode-buttons" id="mode-buttons"></div>
-          <div class="slider-row">
-            <span class="slider-label">Year</span>
-
-            <span class="slider-bound" id="slider-min">2008</span>
-
-            <input
-              type="range"
-              id="year-slider"
-              min="2008"
-              max="2026"
-              step="1"
-              value="2024"
-            />
-
-            <span class="slider-bound" id="slider-max">2026</span>
-
-            <span class="year-display" id="year-display">2024</span>
-          </div>
-          <div class="peak-row">
-            <button id="peak-btn" class="peak-btn">Jump to Peak Year</button>
-            <span id="peak-label" class="peak-label"></span>
-          </div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-stat">
-            <div class="chart-stat-num" id="annual-total">—</div>
-            <div class="chart-stat-label">Annual Riders</div>
-          </div>
-          <div id="chart">
-            <div id="upload-prompt" style="display:none"></div>
-          </div>
-          <div class="tooltip" id="tooltip">
-            <div class="tooltip-month" id="tt-month"></div>
-            <div class="tooltip-val" id="tt-val"></div>
-          </div>
-        </div>
-      </div>
-
-      <p class="viz-caption">
-        Figure 1: Annual ridership for each transit mode. Drag slider to view year.
-      </p>
-
-      <div id="analysis-callout" class="analysis-callout" style="display:none;">
-        <span class="analysis-icon">📊</span>
-        <p id="analysis-text"></p>
-      </div>
-
-      <div class="writeup">
-
-    <h2>Current Progress</h2>
-
-      <div class="callout">
-        <p>As of now, we have started with the first part of our data storytelling which is comparing different types of public transit. 
-          For the "All" tab, the chart is stratified by transit mode and month, allowing the viewer to compare all modes for each corresponding year. 
-          While the viewer is given the ability to toggle between each category, the purpose of the all tab is to show that in every year across almost every month when subway system data starts being recorded, the subway has the highest amount of riders. 
-          This would be essentially in highlighting to show why so much money is being allocated for the 5 year MTA capital plan in comparison to all transit systems. 
-          Starting off with this plot allows for us to show the viewer why the subway system is the most essential form of transit, and later segue into larger takeaways. 
-          We also added a Peak Year button that jumps the slider to the highest ridership year for whichever agency the user selects. 
-          This makes it easy to compare how different agencies peaked at different times. 
-          We also added callouts that now appear automatically for notable years; for example, when a viewer selects 2020, a callout explains the COVID-19 ridership collapse and its scale.
-        </p>
-      </div>
-      <h2>Challenges</h2>
-      <div class="callout">
-        <p>Some challenges include incorporating the storytelling of this project to give direct takeaways
-          and ensuring that no information is miscommunicated. For example, even thought the nY Subway system was 
-          built in 1904, the data recorded from MTA only begins in 2018, while other systems like the B&T and MNR
-          are recorded in 2008. This makes it seem like there is a large transition in 2018 where
-          the NY subway system all of a sudden has the largest ridership, so a viewer not paying attention
-          might assume that B&T has had the highest ridership in all the years even tho this might not be true.
-          Other challenges would be making the visualizations more meaningful such as adding callouts for context
-          (ridership would fall for all transit during the pandemic), doing research to add when certain policies 
-          were in place, and incorporating sentiment data that we have previously analyzed to show how policy 
-          actually affects riders in other ways than just raw numbers in participation. The most challenging thing
-          will be designing a visualization which frames this information without being overwhelming which
-          might entail adding animations or timed transitions.
+    <div class="story-intro">
+      <div class="container">
+        <p class="article-tag">Section 1 of 5</p>
+        <h2 class="section-title">The Subway Carries Everyone</h2>
+        <p class="section-lead">
+          New York City has buses, commuter rails, bridges, and tunnels —
+          but one mode dominates everything else by an almost incomprehensible margin.
+          Scroll to see how the subway became the backbone of the city.
         </p>
       </div>
     </div>
-  </main>
+
+    <div class="scrolly-outer" id="scrolly">
+
+      <!-- STICKY CHART -->
+      <div class="scrolly-sticky" id="scrolly-sticky">
+
+        <div class="viz-block">
+          <div class="controls" id="chart-controls">
+            <div class="mode-buttons" id="mode-buttons"></div>
+            <div class="slider-row">
+              <span class="slider-label">Year</span>
+              <span class="slider-bound" id="slider-min">2008</span>
+              <input type="range" id="year-slider" min="2008" max="2026" step="1" value="2024" />
+              <span class="slider-bound" id="slider-max">2026</span>
+              <span class="year-display" id="year-display">2024</span>
+            </div>
+            <div class="peak-row">
+              <button id="peak-btn" class="peak-btn">Jump to Peak Year</button>
+              <span id="peak-label" class="peak-label"></span>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-stat">
+              <div class="chart-stat-num" id="annual-total">—</div>
+              <div class="chart-stat-label">Annual Riders</div>
+            </div>
+            <div id="chart">
+              <div id="upload-prompt" style="display:none"></div>
+            </div>
+            <div class="tooltip" id="tooltip">
+              <div class="tooltip-month" id="tt-month"></div>
+              <div class="tooltip-val" id="tt-val"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="analysis-callout" class="analysis-callout" style="display:none;">
+          <span class="analysis-icon">📊</span>
+          <p id="analysis-text"></p>
+        </div>
+
+        <div class="unlock-toast" id="unlock-toast" style="display:none;">
+          🎮 Now it's your turn — explore the data!
+        </div>
+
+      </div><!-- /scrolly-sticky -->
+
+      <!-- SCROLL STEPS -->
+      <div class="scrolly-steps" id="scrolly-steps">
+
+        <div class="scroll-step" data-step="1">
+          <div class="step-card">
+            <span class="step-eyebrow">2008 — Where it all starts</span>
+            <h3>Before the subway data arrives</h3>
+            <p>
+              In 2008, the MTA recorded ridership for buses, commuter rail,
+              bridges & tunnels, and the Staten Island Railway.
+              The subway data doesn't appear until 2018 — but its absence
+              makes what comes next even more striking.
+            </p>
+          </div>
+        </div>
+
+        <div class="scroll-step" data-step="2">
+          <div class="step-card">
+            <span class="step-eyebrow">2018 — The subway enters the picture</span>
+            <h3>One mode dwarfs all others</h3>
+            <p>
+              The moment subway ridership appears in the dataset, it towers
+              over every other transit mode. In 2018 alone, the subway
+              carried over 1.7 billion riders — more than all other modes
+              <em>combined</em>.
+            </p>
+          </div>
+        </div>
+
+        <div class="scroll-step" data-step="3">
+          <div class="step-card">
+            <span class="step-eyebrow">2019 — Peak ridership</span>
+            <h3>The high-water mark</h3>
+            <p>
+              2019 was the subway's best year on record in this dataset.
+              Then, in a matter of weeks, everything changed.
+            </p>
+          </div>
+        </div>
+
+        <div class="scroll-step" data-step="4">
+          <div class="step-card">
+            <span class="step-eyebrow">2020 — The collapse</span>
+            <h3>COVID-19 and the 90% cliff</h3>
+            <p>
+              By April 2020, subway ridership fell 90%. Bridge and tunnel
+              traffic dropped 65%. Commuter rail fell 95%. The MTA faced a
+              $16.2 billion budget gap — and the subway, as the city's
+              most essential artery, bore the largest burden of recovery.
+            </p>
+          </div>
+        </div>
+
+        <div class="scroll-step" data-step="5">
+          <div class="step-card step-card--unlock">
+            <span class="step-eyebrow">Your turn</span>
+            <h3>Explore every year, every agency</h3>
+            <p>
+              Use the controls above to compare any transit mode across
+              any year. Try the <strong>Peak Year</strong> button to see
+              how far each agency still is from its pre-pandemic high.
+            </p>
+          </div>
+        </div>
+
+      </div><!-- /scrolly-steps -->
+    </div><!-- /scrolly-outer -->
+
+    <p class="viz-caption">
+      Figure 1: Annual ridership for each transit mode. Data: MTA Monthly Ridership 2008–2026.
+    </p>
+
+  </section>
+
+<!-- ═══════════════════════════════════════
+     SECTION 2 — THE CAPITAL PLAN
+════════════════════════════════════════ -->
+<section class="story-section" id="section-capital">
+
+  <div class="story-intro">
+    <div class="container">
+      <p class="article-tag">Section 2 of 5</p>
+      <h2 class="section-title">A $68.4 Billion Bet</h2>
+      <p class="section-lead">
+        The MTA's 2025–2029 Capital Plan is the largest state-of-good-repair
+        investment in its history. More than 90% goes toward rebuilding and
+        improving the existing system — not expanding it. Here's exactly where
+        the money is going — and how much of it is really about the subway.
+      </p>
+    </div>
+  </div>
+
+  <!-- SCROLLYTELLING WRAPPER -->
+  <div class="scrolly-outer" id="scrolly-capital">
+
+    <!-- LEFT: sticky treemap -->
+    <div class="scrolly-sticky" id="capital-sticky">
+      <div class="capital-chart-wrap">
+        <div class="capital-stat">
+          <div class="capital-stat-num" id="capital-total">$68.4B</div>
+          <div class="capital-stat-label">Total 2025–2029 Capital Plan</div>
+        </div>
+        <div id="treemap-container"></div>
+        <div class="capital-tooltip" id="capital-tooltip">
+          <div class="capital-tt-category" id="capital-tt-category"></div>
+          <div class="capital-tt-agency"   id="capital-tt-agency"></div>
+          <div class="capital-tt-val"      id="capital-tt-val"></div>
+        </div>
+      </div>
+
+      <div class="capital-sidebar">
+        <p class="capital-sidebar-label">Filter by Agency</p>
+        <div class="capital-agency-btns" id="capital-agency-btns"></div>
+        <div class="capital-legend" id="capital-legend"></div>
+        <div class="capital-callout" id="capital-callout" style="display:none;">
+          <span class="capital-callout-icon">📋</span>
+          <div>
+            <div class="capital-callout-name"  id="capital-callout-name"></div>
+            <div class="capital-callout-total" id="capital-callout-total"></div>
+            <div class="capital-callout-desc"  id="capital-callout-desc"></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /capital-sticky -->
+
+    <!-- RIGHT: scroll steps -->
+    <div class="scrolly-steps" id="capital-steps">
+
+      <div class="capital-scroll-step" data-capital-step="1">
+        <div class="step-card">
+          <span class="step-eyebrow">The subway's share</span>
+          <h3>Nearly half the plan is subway</h3>
+          <p>
+            Passenger Stations, Subway Cars, and Signals & Communications
+            alone account for over <strong>$30 billion</strong> — nearly
+            half of the entire $68.4B plan. No other transit mode comes close.
+            This reflects the subway's role as the city's most critical
+            and most deteriorated infrastructure.
+          </p>
+        </div>
+      </div>
+
+      <div class="capital-scroll-step" data-capital-step="2">
+        <div class="step-card">
+          <span class="step-eyebrow">Compared to last time</span>
+          <h3>24% bigger than the 2020–2024 plan</h3>
+          <p>
+            The previous capital plan totaled $54.8B. This plan is
+            $13.6B larger — a 24.8% increase. But the subway's
+            portion grew even faster, driven by two aging car models
+            (R62 and R68) hitting end-of-life simultaneously and
+            Depression-era signals still running on eight lines.
+          </p>
+        </div>
+      </div>
+
+      <div class="capital-scroll-step" data-capital-step="3">
+        <div class="step-card">
+          <span class="step-eyebrow">Still not enough</span>
+          <h3>$13.7B/year vs. $23B needed</h3>
+          <p>
+            JP Morgan estimated the MTA needs <strong>$23 billion
+            annually</strong> to match private industry peers. This
+            entire 5-year plan averages just $13.7B/year — barely
+            half of what's needed. The subway is being kept alive,
+            not modernized.
+          </p>
+        </div>
+      </div>
+
+      <div class="capital-scroll-step" data-capital-step="4">
+        <div class="step-card step-card--unlock">
+          <span class="step-eyebrow">One expansion project</span>
+          <h3>Everything else is repair, not growth</h3>
+          <p>
+            The only expansion project in the entire plan is the
+            Interborough Express (~$7.2B). Every other dollar goes
+            toward state of good repair — fixing what already exists.
+            For a system carrying 1.7 billion riders a year, the city
+            is running to stand still.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /capital-steps -->
+  </div><!-- /scrolly-capital -->
+
+  <p class="viz-caption" style="max-width:1200px; margin: 16px auto 0; padding: 0 24px;">
+    Figure 2: MTA 2025–2029 Capital Plan budget by category. Source: NY Open Data ACEP Projects.
+  </p>
+
+</section>mproving the existing system — not expanding it. Here's exactly where
+  
+  <!-- ═══════════════════════════════════════
+       SECTION 2 — EQUITY GAP (STUB)
+  ════════════════════════════════════════ -->
+  <section class="story-section" id="section-equity">
+    <div class="story-intro">
+      <div class="container">
+        <p class="article-tag">Section 3 of 5</p>
+        <h2 class="section-title">Who Gets Left Behind</h2>
+        <p class="section-lead">
+          About one in five New Yorkers struggle to pay for public transit —
+          a burden disproportionately borne by Black and Latino commuters and working mothers.
+        </p>
+      </div>
+    </div>
+    <div class="stub-viz container">
+      <div class="stub-box">👥 Demographic bubble chart — coming soon</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+     SECTION 4 — WHAT HAPPENS TO YOUR COMMUTE
+════════════════════════════════════════ -->
+<section class="story-section" id="section-commute">
+
+  <div class="story-intro">
+    <div class="container">
+      <p class="article-tag">Section 4 of 5</p>
+      <h2 class="section-title">What Happens to Your Commute</h2>
+      <p class="section-lead">
+        Funding cuts don't just reduce service on paper — they translate directly into
+        longer waits, lost time, and real economic costs for millions of daily riders.
+        Scroll to see how cuts ripple across the network, then try it yourself.
+      </p>
+    </div>
+  </div>
+
+  <!-- SCROLLYTELLING WRAPPER -->
+  <div class="scrolly-outer" id="scrolly-commute">
+
+    <!-- LEFT: sticky map + stats -->
+    <div class="scrolly-sticky" id="commute-sticky">
+
+      <div class="sim-map-wrap">
+        <svg id="subway-map" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <!-- stats (hidden until unlocked) -->
+      <div id="sim-stats-panel" style="display:none; margin-top: 20px;">
+        <div id="sim-route-buttons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;">
+          <div class="chart-stat-card">
+            <div class="chart-stat-label">Lines cut</div>
+            <div class="chart-stat-num" id="sim-cut" style="color:#e07b7b;">0</div>
+          </div>
+          <div class="chart-stat-card">
+            <div class="chart-stat-label">Stops affected</div>
+            <div class="chart-stat-num" id="sim-stops">0</div>
+          </div>
+          <div class="chart-stat-card">
+            <div class="chart-stat-label">Avg wait increase</div>
+            <div class="chart-stat-num" id="sim-wait" style="color:#e07b7b;">+0.0 min</div>
+          </div>
+          <div class="chart-stat-card">
+            <div class="chart-stat-label">Daily riders affected</div>
+            <div class="chart-stat-num" id="sim-riders">0</div>
+          </div>
+        </div>
+
+        <div id="sim-roi" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div class="chart-stat-card">
+              <div class="chart-stat-label">Lost hours / year</div>
+              <div class="chart-stat-num" id="sim-hours" style="color:#e07b7b;">—</div>
+            </div>
+            <div class="chart-stat-card">
+              <div class="chart-stat-label">Economic cost / year</div>
+              <div class="chart-stat-num" id="sim-econ" style="color:#e07b7b;">—</div>
+            </div>
+            <div class="chart-stat-card" style="grid-column:span 2;">
+              <div class="chart-stat-label">Equivalent to...</div>
+              <div class="chart-stat-num" id="sim-equiv" style="font-size:14px;">—</div>
+            </div>
+          </div>
+          <div id="sim-context" style="border-left:3px solid var(--accent);padding:12px 16px;font-size:13px;line-height:1.6;color:rgba(255,255,255,0.75);background:rgba(200,150,62,0.08);margin-bottom:1rem;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+            <div class="chart-stat-card">
+              <div class="chart-stat-label">Hours returned / year</div>
+              <div class="chart-stat-num" id="sim-hours-back" style="color:#7bc67e;">—</div>
+            </div>
+            <div class="chart-stat-card">
+              <div class="chart-stat-label">Economic value restored</div>
+              <div class="chart-stat-num" id="sim-econ-back" style="color:#7bc67e;">—</div>
+            </div>
+            <div class="chart-stat-card">
+              <div class="chart-stat-label">Riders regain access</div>
+              <div class="chart-stat-num" id="sim-riders-back" style="color:#7bc67e;">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sim-no-cuts" style="font-size:13px;color:rgba(255,255,255,0.4);font-style:italic;margin-top:8px;">
+          No lines cut yet. Click a line on the map or a button above.
+        </div>
+      </div>
+
+      <div class="unlock-toast" id="commute-unlock-toast" style="display:none;">
+        🗺️ Now it's your turn — click any line to cut it!
+      </div>
+
+    </div><!-- /commute-sticky -->
+
+    <!-- RIGHT: scroll steps -->
+    <div class="scrolly-steps" id="commute-steps">
+
+      <div class="commute-scroll-step" data-commute-step="1">
+        <div class="step-card">
+          <span class="step-eyebrow">The L train</span>
+          <h3>400,000 riders. No backup.</h3>
+          <p>
+            The L serves 24 stops connecting Williamsburg, Bushwick,
+            and Canarsie to Manhattan. When the MTA proposed shutting
+            it down for repairs in 2019, it triggered a citywide crisis.
+            For many outer Brooklyn neighborhoods, the L is the only
+            viable connection to the rest of the city.
+          </p>
+        </div>
+      </div>
+
+      <div class="commute-scroll-step" data-commute-step="2">
+        <div class="step-card">
+          <span class="step-eyebrow">The outer borough lines</span>
+          <h3>No redundancy, no alternatives</h3>
+          <p>
+            The J/Z, G, and 7 trains are the only direct connections
+            for hundreds of thousands of Queens and Brooklyn residents.
+            Unlike Manhattan lines which overlap, these routes have
+            no parallel service — cut them and riders have no fallback.
+          </p>
+        </div>
+      </div>
+
+      <div class="commute-scroll-step" data-commute-step="3">
+        <div class="step-card">
+          <span class="step-eyebrow">The backbone</span>
+          <h3>4/5/6 and A/C/E carry entire cities</h3>
+          <p>
+            The Lexington Ave line (4/5/6) alone carries more daily
+            riders than the entire DC Metro system. The 8th Ave line
+            (A/C/E) isn't far behind. Reducing frequency on either
+            doesn't just inconvenience riders — it paralyzes the
+            economic engine of the entire region.
+          </p>
+        </div>
+      </div>
+
+      <div class="commute-scroll-step" data-commute-step="4">
+        <div class="step-card">
+          <span class="step-eyebrow">The domino effect</span>
+          <h3>Cuts don't stay contained</h3>
+          <p>
+            When one line is reduced, riders don't disappear —
+            they flood adjacent lines. Overcrowding cascades across
+            the network, slowing trains system-wide and turning a
+            single funding cut into a citywide delay event.
+          </p>
+        </div>
+      </div>
+
+      <div class="commute-scroll-step" data-commute-step="5">
+        <div class="step-card step-card--unlock">
+          <span class="step-eyebrow">Your turn</span>
+          <h3>Cut any line. See the real cost.</h3>
+          <p>
+            Click any line on the map or use the buttons below
+            the map to simulate funding cuts. The stats update
+            in real time — including the economic cost to the city.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /commute-steps -->
+  </div><!-- /scrolly-commute -->
+
+  <p class="viz-caption" style="max-width:1200px;margin:16px auto 0;padding:0 24px;">
+    Figure 4: Click subway lines to simulate funding cuts. Headway data from MTA GTFS.
+  </p>
+
+</section>
+ 
+  <!--═══════════════════════════════════════
+       SECTION 5 — SOLUTIONS (STUB)
+  ════════════════════════════════════════ -->
+  <section class="story-section" id="section-solutions">
+    <div class="story-intro">
+      <div class="container">
+        <p class="article-tag">Section 5 of 5</p>
+        <h2 class="section-title">How We Fix It</h2>
+        <p class="section-lead">
+          From free buses to parking meter revenue, there are real paths forward.
+          Here's what each option would cost — and who it would help.
+        </p>
+      </div>
+    </div>
+    <div class="stub-viz container">
+      <div class="stub-box">⚖️ Solutions comparison card — coming soon</div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer class="site-footer">
@@ -146,689 +520,8 @@
       </nav>
     </div>
   </footer>
-<script>
-const AGENCIES = ['Subway','Bus','NYCT Bus','MTA Bus','LIRR','MNR','AAR','BT','B&T','SIR'];
-const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const COLORS = {
-  'Subway':   '#c8963e',
-  'Bus':      '#4a9eca',
-  'NYCT Bus': '#7bc67e',
-  'MTA Bus':  '#e07b7b',
-  'LIRR':     '#b07fd4',
-  'MNR':      '#e0a84a',
-  'AAR':      '#5ecec8',
-  'BT':       '#e08a4a',
-  'B&T':      '#a0c4e8',
-  'SIR':      '#d4a0c8',
-};
+  <script src="index.js"></script>
 
-let allData = [],
-    activeAgency = 'Subway',
-    activeYear = 2024;
-
-let globalMax = 0,
-    chartBuilt = false;
-
-let agencyYearRanges = {};
-
-let svg, xScale, yScale, lineGen, areaGen;
-
-const margin = { top: 20, right: 20, bottom: 36, left: 64 };
-const height = 340 - margin.top - margin.bottom;
-
-// =========================
-// BUTTONS
-// =========================
-
-const btnContainer = document.getElementById('mode-buttons');
-
-// ALL button
-const allBtn = document.createElement('button');
-
-allBtn.className = 'mode-btn';
-allBtn.textContent = 'All';
-
-allBtn.addEventListener('click', () => {
-  activeAgency = 'ALL';
-
-  document.querySelectorAll('.mode-btn')
-    .forEach(b => b.classList.remove('active'));
-
-  allBtn.classList.add('active');
-
-  updateSliderRange();
-  updateGlobalMax();
-  render();
-});
-
-btnContainer.appendChild(allBtn);
-
-// Agency buttons
-AGENCIES.forEach(agency => {
-  const btn = document.createElement('button');
-
-  btn.className =
-    'mode-btn' + (agency === activeAgency ? ' active' : '');
-
-  btn.textContent = agency;
-
-  btn.addEventListener('click', () => {
-    activeAgency = agency;
-
-    document.querySelectorAll('.mode-btn')
-      .forEach(b => b.classList.remove('active'));
-
-    btn.classList.add('active');
-
-    updateSliderRange();
-    updateGlobalMax();
-    render();
-  });
-
-  btnContainer.appendChild(btn);
-});
-
-// =========================
-// SLIDER
-// =========================
-
-const slider = document.getElementById('year-slider');
-const yearDisplay = document.getElementById('year-display');
-
-slider.addEventListener('input', () => {
-  activeYear = +slider.value;
-  yearDisplay.textContent = activeYear;
-  render();
-});
-
-// =========================
-// LOAD CSV
-// =========================
-
-d3.csv(
-  "data/MTA_Monthly_Ridership___Traffic_Data__Beginning_January_2008_20260517.csv",
-  d => {
-    const date = new Date(d.Month);
-
-    return {
-      date,
-      year: date.getFullYear(),
-      month: date.getMonth(),
-      agency: d.Agency ? d.Agency.trim() : '',
-      ridership: +String(d.Ridership).replace(/,/g, '') || 0
-    };
-  }
-).then(parsed => {
-
-  allData = parsed.filter(
-    d => !isNaN(d.date) && d.ridership > 0
-  );
-
-  // Build year ranges for each agency
-  AGENCIES.forEach(agency => {
-
-    const agencyYears = allData
-      .filter(d => d.agency === agency)
-      .map(d => d.year);
-
-    if (agencyYears.length) {
-      agencyYearRanges[agency] = {
-        min: d3.min(agencyYears),
-        max: d3.max(agencyYears)
-      };
-    }
-  });
-
-  // ALL range
-  const allYears = allData.map(d => d.year);
-
-  agencyYearRanges['ALL'] = {
-    min: d3.min(allYears),
-    max: d3.max(allYears)
-  };
-
-  activeYear = agencyYearRanges['Subway'].max;
-
-  updateSliderRange();
-  updateGlobalMax();
-  buildChart();
-  render();
-});
-
-// =========================
-// HELPERS
-// =========================
-
-function updateSliderRange() {
-
-  const range =
-    agencyYearRanges[activeAgency] ||
-    agencyYearRanges['ALL'];
-
-  slider.min = range.min;
-  slider.max = range.max;
-
-  // IMPORTANT: update visible range labels
-  const minLabel = document.getElementById('slider-min');
-  const maxLabel = document.getElementById('slider-max');
-
-  if (minLabel) minLabel.textContent = range.min;
-  if (maxLabel) maxLabel.textContent = range.max;
-
-  // Clamp year into valid range
-  if (activeYear < range.min) {
-    activeYear = range.min;
-  }
-
-  if (activeYear > range.max) {
-    activeYear = range.max;
-  }
-
-  slider.value = activeYear;
-  yearDisplay.textContent = activeYear;
-}
-
-function updateGlobalMax() {
-
-  if (activeAgency === 'ALL') {
-
-    globalMax =
-      d3.max(allData, d => d.ridership) || 1;
-
-  } else {
-
-    globalMax =
-      d3.max(
-        allData.filter(d => d.agency === activeAgency),
-        d => d.ridership
-      ) || 1;
-  }
-}
-
-// =========================
-// BUILD CHART
-// =========================
-
-function buildChart() {
-
-  document.getElementById('chart').innerHTML = '';
-
-  const W =
-    document.querySelector('.viz-block').clientWidth - 40;
-
-  const innerW =
-    W - margin.left - margin.right;
-
-  svg = d3.select('#chart')
-    .append('svg')
-    .attr('viewBox', `0 0 ${W} 340`)
-    .attr('width', W)
-    .attr('height', 340);
-
-  const defs = svg.append('defs');
-
-  const grad = defs.append('linearGradient')
-    .attr('id','areaGradient')
-    .attr('x1','0')
-    .attr('y1','0')
-    .attr('x2','0')
-    .attr('y2','1');
-
-  grad.append('stop')
-    .attr('offset','0%')
-    .attr('stop-color','#c8963e')
-    .attr('stop-opacity',0.25);
-
-  grad.append('stop')
-    .attr('offset','100%')
-    .attr('stop-color','#c8963e')
-    .attr('stop-opacity',0.02);
-
-  const g = svg.append('g')
-    .attr(
-      'transform',
-      `translate(${margin.left},${margin.top})`
-    );
-
-  xScale = d3.scalePoint()
-    .domain(MONTH_NAMES)
-    .range([0, innerW])
-    .padding(0.1);
-
-  yScale = d3.scaleLinear()
-    .domain([0, globalMax * 1.08])
-    .range([height, 0]);
-
-  g.append('g')
-    .attr('class','grid')
-    .call(
-      d3.axisLeft(yScale)
-        .ticks(5)
-        .tickSize(-innerW)
-        .tickFormat('')
-    );
-
-  g.append('g')
-    .attr('class','axis')
-    .attr('transform',`translate(0,${height})`)
-    .call(
-      d3.axisBottom(xScale)
-        .tickSize(0)
-        .tickPadding(10)
-    );
-
-  g.append('g')
-    .attr('class','axis y-axis')
-    .call(
-      d3.axisLeft(yScale)
-        .ticks(5)
-        .tickFormat(d =>
-          d >= 1e6
-            ? (d/1e6).toFixed(1)+'M'
-            : d >= 1e3
-            ? (d/1e3).toFixed(0)+'K'
-            : d
-        )
-    );
-
-  lineGen = d3.line()
-    .x(d => xScale(MONTH_NAMES[d.month]))
-    .y(d => yScale(d.ridership))
-    .curve(d3.curveCatmullRom.alpha(0.5));
-
-  areaGen = d3.area()
-    .x(d => xScale(MONTH_NAMES[d.month]))
-    .y0(height)
-    .y1(d => yScale(d.ridership))
-    .curve(d3.curveCatmullRom.alpha(0.5));
-
-  g.append('path')
-    .attr('class','area-path')
-    .attr('id','area-path');
-
-  g.append('path')
-    .attr('class','line-path')
-    .attr('id','line-path');
-
-  g.append('g')
-    .attr('id','dots-group');
-
-  chartBuilt = true;
-}
-
-// =========================
-// RENDER
-// =========================
-
-function render() {
-
-  if (!chartBuilt) return;
-
-  const g = svg.select('g');
-
-  yScale.domain([0, globalMax * 1.08]);
-
-  d3.select('.y-axis').call(
-    d3.axisLeft(yScale)
-      .ticks(5)
-      .tickFormat(d =>
-        d >= 1e6
-          ? (d/1e6).toFixed(1)+'M'
-          : d >= 1e3
-          ? (d/1e3).toFixed(0)+'K'
-          : d
-      )
-  );
-
-  g.selectAll('.agency-line-group').remove();
-
-  d3.select('#legend').remove();
-
-// =========================
-// ALL MODE
-// =========================
-
-if (activeAgency === 'ALL') {
-
-  d3.select('#line-path').attr('d', null);
-  d3.select('#area-path').attr('d', null);
-
-  d3.select('#dots-group')
-    .selectAll('circle')
-    .remove();
-
-  const yearlyTotal = d3.sum(
-    allData.filter(d => d.year === activeYear),
-    d => d.ridership
-  );
-
-  const totalEl = document.getElementById('annual-total');
-
-  if (totalEl) {
-    totalEl.textContent =
-      yearlyTotal >= 1e9
-        ? (yearlyTotal / 1e9).toFixed(2) + 'B total riders'
-        : yearlyTotal >= 1e6
-        ? (yearlyTotal / 1e6).toFixed(1) + 'M total riders'
-        : yearlyTotal.toLocaleString() + ' total riders';
-  }
-
-  // =========================
-  // RENDER EACH AGENCY LINE
-  // =========================
-
-  AGENCIES.forEach(agency => {
-
-    const yearData = allData
-      .filter(d =>
-        d.agency === agency &&
-        d.year === activeYear
-      )
-      .sort((a, b) => a.month - b.month);
-
-    if (!yearData.length) return;
-
-    const agGroup = g.append('g')
-      .attr('class','agency-line-group');
-
-    agGroup.append('path')
-      .datum(yearData)
-      .attr('fill','none')
-      .attr('stroke', COLORS[agency] || '#fff')
-      .attr('stroke-width', 2)
-      .attr('stroke-linecap','round')
-      .attr('stroke-linejoin','round')
-      .attr('d', lineGen);
-
-    agGroup.selectAll('circle')
-      .data(yearData)
-      .enter()
-      .append('circle')
-      .attr('r', 3.5)
-      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
-      .attr('cy', d => yScale(d.ridership))
-      .attr('fill', COLORS[agency] || '#fff')
-      .attr('stroke', '#112236')
-      .attr('stroke-width', 1.5)
-
-      .on('mouseover', function(event, d) {
-
-        d3.select(this).attr('r', 6);
-
-        const tt = document.getElementById('tooltip');
-
-        document.getElementById('tt-month')
-          .textContent =
-            agency +
-            ' · ' +
-            MONTH_NAMES[d.month] +
-            ' ' +
-            d.year;
-
-        document.getElementById('tt-val')
-          .textContent =
-            d.ridership.toLocaleString() +
-            ' riders';
-
-        tt.style.opacity = 1;
-
-        const rect =
-          document.querySelector('.chart-container')
-            .getBoundingClientRect();
-
-        tt.style.left =
-          (event.clientX - rect.left + 12) + 'px';
-
-        tt.style.top =
-          (event.clientY - rect.top - 36) + 'px';
-      })
-
-      .on('mousemove', function(event) {
-
-        const rect =
-          document.querySelector('.chart-container')
-            .getBoundingClientRect();
-
-        const tt = document.getElementById('tooltip');
-
-        tt.style.left =
-          (event.clientX - rect.left + 12) + 'px';
-
-        tt.style.top =
-          (event.clientY - rect.top - 36) + 'px';
-      })
-
-      .on('mouseout', function() {
-
-        d3.select(this).attr('r', 3.5);
-
-        document.getElementById('tooltip')
-          .style.opacity = 0;
-      });
-  });
-
-  const legend = d3.select('.chart-container')
-    .append('div')
-    .attr('id','legend');
-
-  AGENCIES.forEach(agency => {
-
-    const item = legend.append('div')
-      .attr('class','legend-item');
-
-    item.append('span')
-      .attr('class','legend-dot')
-      .style('background', COLORS[agency] || '#fff');
-
-    item.append('span')
-      .attr('class','legend-label')
-      .text(agency);
-  });
-}
-
-  // =========================
-  // SINGLE AGENCY MODE
-  // =========================
-
-  else {
-
-    const yearData = allData
-      .filter(
-        d =>
-          d.agency === activeAgency &&
-          d.year === activeYear
-      )
-      .sort((a, b) => a.month - b.month);
-
-    if (!yearData.length) {
-
-      d3.select('#line-path').attr('d', null);
-
-      d3.select('#area-path').attr('d', null);
-
-      d3.select('#dots-group')
-        .selectAll('circle')
-        .remove();
-
-      document.getElementById('annual-total')
-        .textContent = '—';
-
-      return;
-    }
-
-    const total =
-      d3.sum(yearData, d => d.ridership);
-
-    document.getElementById('annual-total')
-      .textContent =
-        total >= 1e9
-          ? (total/1e9).toFixed(2)+'B'
-          : total >= 1e6
-          ? (total/1e6).toFixed(1)+'M'
-          : total.toLocaleString();
-
-    d3.select('#line-path')
-      .datum(yearData)
-      .transition()
-      .duration(300)
-      .ease(d3.easeCubicOut)
-      .attr('d', lineGen);
-
-    d3.select('#area-path')
-      .datum(yearData)
-      .transition()
-      .duration(300)
-      .ease(d3.easeCubicOut)
-      .attr('d', areaGen);
-
-    const dots = d3.select('#dots-group')
-      .selectAll('circle')
-      .data(yearData, d => d.month);
-
-    dots.enter()
-      .append('circle')
-      .attr('class','dot')
-      .attr('r',4)
-      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
-      .attr('cy', d => yScale(d.ridership))
-
-      .on('mouseover', function(event, d) {
-
-        d3.select(this).attr('r', 6);
-
-        const tt =
-          document.getElementById('tooltip');
-
-        document.getElementById('tt-month')
-          .textContent =
-            MONTH_NAMES[d.month] +
-            ' ' +
-            d.year;
-
-        document.getElementById('tt-val')
-          .textContent =
-            d.ridership.toLocaleString() +
-            ' riders';
-
-        tt.style.opacity = 1;
-
-        const rect =
-          document.querySelector('.chart-container')
-            .getBoundingClientRect();
-
-        tt.style.left =
-          (event.clientX - rect.left + 12) + 'px';
-
-        tt.style.top =
-          (event.clientY - rect.top - 36) + 'px';
-      })
-
-      .on('mousemove', function(event) {
-
-        const rect =
-          document.querySelector('.chart-container')
-            .getBoundingClientRect();
-
-        const tt =
-          document.getElementById('tooltip');
-
-        tt.style.left =
-          (event.clientX - rect.left + 12) + 'px';
-
-        tt.style.top =
-          (event.clientY - rect.top - 36) + 'px';
-      })
-
-      .on('mouseout', function() {
-
-        d3.select(this).attr('r', 4);
-
-        document.getElementById('tooltip')
-          .style.opacity = 0;
-      })
-
-      .merge(dots)
-
-      .transition()
-      .duration(300)
-      .ease(d3.easeCubicOut)
-
-      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
-      .attr('cy', d => yScale(d.ridership));
-
-    dots.exit().remove();
-    updateAnalysis()
-  }
-}
-
-// ── PEAK YEAR BUTTON ──
-function getPeakYear(agency) {
-  if (agency === 'ALL') {
-    // sum ridership across all agencies per year, find max
-    const byYear = d3.rollup(allData, v => d3.sum(v, d => d.ridership), d => d.year);
-    return [...byYear.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
-  }
-  const agencyData = allData.filter(d => d.agency === agency);
-  if (!agencyData.length) return null;
-  const byYear = d3.rollup(agencyData, v => d3.sum(v, d => d.ridership), d => d.year);
-  return [...byYear.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
-}
-
-document.getElementById('peak-btn').addEventListener('click', () => {
-  const peak = getPeakYear(activeAgency);
-  if (!peak) return;
-  activeYear = peak;
-  slider.value = peak;
-  yearDisplay.textContent = peak;
-  updateGlobalMax();
-  render();
-  const label = document.getElementById('peak-label');
-  label.textContent = `Peak year for ${activeAgency === 'ALL' ? 'all agencies' : activeAgency}: ${peak}`;
-});
-
-// CONTEXTUAL ANALYSIS for callouts
-const ANALYSIS = {
-  'ALL': {
-    2020: "By April 2020, the MTA experienced a 90% decrease in subway and bus ridership and a 95% decrease in commuter rail passengers. The MTA faced a cumulative $16.2 billion budget gap from 2020 through 2024 as a result of lost farebox revenue and $567M in unplanned COVID cleaning costs in 2020 alone. (Source: CBC Testimony, Denise Richardson)",
-    2019: "2019 was the last full pre-pandemic year. Use the Peak Year button on each agency to compare how far each mode's ridership still is from its pre-pandemic high.",
-    2022: "Even with ridership returning, the MTA projected a $1.8 billion structural gap even under a full ridership recovery scenario, meaning fare revenue alone could not close the deficit created by the pandemic.",
-    2025: "2025 represents the MTA's strongest post-pandemic ridership year in this dataset. Compare to 2019 using the Peak Year button to see how much ground has been recovered.",
-  },
-  'Subway': {
-    2020: "Subway ridership fell 90% by April 2020. The MTA estimated COVID-related cleaning costs of $567M in 2020, $591M in 2021, $518M in 2022, and $500M annually through 2024. (Source: CBC Testimony)",
-    2019: "2019 was the subway's peak year in this dataset. Drag the slider forward to watch the collapse in 2020 and the slow recovery through 2025.",
-    2025: "The MTA's 2025–2029 Capital Plan allocated $11.93B to passenger stations and $7.2B to subway cars, the ninth capital plan in MTA history.",
-  },
-  'Bus': {
-    2020: "Bus ridership dropped 90% alongside the subway in April 2020, though toll traffic was more resilient (only 15% below pre-pandemic levels at the same time), reflecting that essential drivers returned to roads faster than transit riders. (Source: CBC Testimony)",
-    2019: "2019 was the last full pre-pandemic year for bus ridership. Note that bus recovery post-2020 has been slower than subway recovery, which is visible by comparing their respective Peak Year readings.",
-  },
-  'LIRR': {
-    2020: "Commuter rail saw the steepest drop of any MTA mode: a 95% decrease in passengers by April 2020, compared to 90% for subway and bus. This reflects commuter rail's near-total dependence on Manhattan office trips. (Source: CBC Testimony)",
-  },
-  'MNR': {
-    2020: "Like the LIRR, Metro-North experienced a 95% ridership decline by April 2020. Toll traffic on bridges and tunnels recovered much faster, dropping only 15% at the same point. This stark contrast is visible across the agency tabs.",
-  },
-  'BT': {
-    2020: "Bridge and tunnel traffic fell 65% by April 2020, far less than the 90–95% drops seen on transit. By mid-2020, tolls were only 15% below pre-pandemic levels, making B&T the MTA's most financially resilient revenue source during the crisis. (Source: CBC Testimony)",
-  },
-};
-
-function updateAnalysis() {
-  const callout = document.getElementById('analysis-callout');
-  const textEl = document.getElementById('analysis-text');
-  const agencyNotes = ANALYSIS[activeAgency] || ANALYSIS['ALL'];
-  const note = agencyNotes?.[activeYear];
-  if (note) {
-    textEl.textContent = note;
-    callout.style.display = 'flex';
-    // re-trigger animation
-    callout.style.animation = 'none';
-    callout.offsetHeight; // reflow
-    callout.style.animation = '';
-  } else {
-    callout.style.display = 'none';
-  }
-}
-</script>
+</body>
+</html>
