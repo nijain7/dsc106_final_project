@@ -43,6 +43,7 @@
     </div>
   </main>
 
+<<<<<<< HEAD
   <!-- ═══════════════════════════════════════
        SECTION 3 — THE SUBWAY CARRIES EVERYONE
   ════════════════════════════════════════ -->
@@ -56,6 +57,197 @@
           New York City has buses, commuter rails, bridges, and tunnels —
           but one mode dominates everything else by an almost incomprehensible margin.
           Scroll to see how the subway became the backbone of the city.
+=======
+      
+
+      <h2>MTA Monthly Ridership from 2008 to 2026</h2>
+
+      <p>
+       Systemwide Ridership starting from 2008, recorded on a monthly basis.
+      </p>
+
+      <!-- VISUALIZATION -->
+      <div class="viz-block">
+        <div class="controls">
+          <div class="mode-buttons" id="mode-buttons"></div>
+          <div class="slider-row">
+            <span class="slider-label">Year</span>
+
+            <span class="slider-bound" id="slider-min">2008</span>
+
+            <input
+              type="range"
+              id="year-slider"
+              min="2008"
+              max="2026"
+              step="1"
+              value="2024"
+            />
+
+            <span class="slider-bound" id="slider-max">2026</span>
+
+            <span class="year-display" id="year-display">2024</span>
+          </div>
+          <div class="peak-row">
+            <button id="peak-btn" class="peak-btn">Jump to Peak Year</button>
+            <span id="peak-label" class="peak-label"></span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-stat">
+            <div class="chart-stat-num" id="annual-total">—</div>
+            <div class="chart-stat-label">Annual Riders</div>
+          </div>
+          <div id="chart">
+            <div id="upload-prompt" style="display:none"></div>
+          </div>
+          <div class="tooltip" id="tooltip">
+            <div class="tooltip-month" id="tt-month"></div>
+            <div class="tooltip-val" id="tt-val"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="viz-caption">
+        Figure 1: Annual ridership for each transit mode. Drag slider to view year.
+      </p>
+
+      <div id="analysis-callout" class="analysis-callout" style="display:none;">
+        <span class="analysis-icon">📊</span>
+        <p id="analysis-text"></p>
+      </div>
+
+      <h2>What Happens When We Cut Subway Lines?</h2>
+<p>
+  Funding cuts don't just reduce service on paper, they translate directly into 
+  longer waits, lost time, and real economic costs for millions of daily riders. 
+  Select lines below to simulate what happens when routes are reduced or eliminated 
+  and see the cascading impact on commuters across the city.
+</p>
+
+<div class="viz-block" style="min-height: unset;">
+  <div style="padding: 0.5rem 0;">
+
+    <p style="font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 10px;">
+      Click lines to cut them; impact updates in real time
+    </p>
+
+    <div id="sim-route-buttons" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem;"></div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem;">
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Lines cut</div>
+        <div class="chart-stat-num" id="sim-cut" style="color: #e07b7b;">0</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Stops affected</div>
+        <div class="chart-stat-num" id="sim-stops">0</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Avg wait increase</div>
+        <div class="chart-stat-num" id="sim-wait" style="color: #e07b7b;">+0.0 min</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Daily riders affected</div>
+        <div class="chart-stat-num" id="sim-riders">0</div>
+      </div>
+    </div>
+
+    <div id="sim-roi" style="display: none;">
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; margin-bottom: 12px; margin-top: 0;">
+        What this costs the city
+      </h3>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 12px;">
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Lost hours / year</div>
+          <div class="chart-stat-num" id="sim-hours" style="color: #e07b7b;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Economic cost / year</div>
+          <div class="chart-stat-num" id="sim-econ" style="color: #e07b7b;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Equivalent to...</div>
+          <div class="chart-stat-num" id="sim-equiv" style="font-size: 15px;">—</div>
+        </div>
+      </div>
+
+      <div id="sim-context" style="
+        border-left: 3px solid var(--accent);
+        border-radius: 0;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.75);
+        background: rgba(200,150,62,0.08);
+        margin-bottom: 1.5rem;
+      "></div>
+
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; margin-bottom: 12px; margin-top: 0;">
+        Restore funding: what riders get back
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Hours returned / year</div>
+          <div class="chart-stat-num" id="sim-hours-back" style="color: #7bc67e;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Economic value restored</div>
+          <div class="chart-stat-num" id="sim-econ-back" style="color: #7bc67e;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Riders regain access</div>
+          <div class="chart-stat-num" id="sim-riders-back" style="color: #7bc67e;">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sim-no-cuts" style="font-size: 13px; color: rgba(255,255,255,0.4); font-style: italic; margin-top: 4px;">
+      No lines cut yet. Try removing the W, N, or J train to see the impact.
+    </div>
+
+    <p style="font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+      Headways computed from MTA GTFS schedule data (stop_times.txt, 563,534 records). 
+      Daily ridership: 3.5M subway riders / day (MTA Monthly Ridership dataset). 
+      Riders affected estimated at 60% of route's stop share (accounting for transfer availability). 
+      Economic cost uses NYC mean wage $38.65/hr (BLS 2024). 
+      Wait increase = avg headway of cut lines ÷ 2 (expected wait for random arrival).
+    </p>
+  </div>
+</div>
+<p class="viz-caption">Figure 3: Click subway lines to simulate funding cuts. All headway values from MTA GTFS data.</p>
+
+      <div class="writeup">
+
+    <h2>Current Progress</h2>
+
+      <div class="callout">
+        <p>As of now, we have started with the first part of our data storytelling which is comparing different types of public transit. 
+          For the "All" tab, the chart is stratified by transit mode and month, allowing the viewer to compare all modes for each corresponding year. 
+          While the viewer is given the ability to toggle between each category, the purpose of the all tab is to show that in every year across almost every month when subway system data starts being recorded, the subway has the highest amount of riders. 
+          This would be essentially in highlighting to show why so much money is being allocated for the 5 year MTA capital plan in comparison to all transit systems. 
+          Starting off with this plot allows for us to show the viewer why the subway system is the most essential form of transit, and later segue into larger takeaways. 
+          We also added a Peak Year button that jumps the slider to the highest ridership year for whichever agency the user selects. 
+          This makes it easy to compare how different agencies peaked at different times. 
+          We also added callouts that now appear automatically for notable years; for example, when a viewer selects 2020, a callout explains the COVID-19 ridership collapse and its scale.
+        </p>
+      </div>
+      <h2>Challenges</h2>
+      <div class="callout">
+        <p>Some challenges include incorporating the storytelling of this project to give direct takeaways
+          and ensuring that no information is miscommunicated. For example, even thought the nY Subway system was 
+          built in 1904, the data recorded from MTA only begins in 2018, while other systems like the B&T and MNR
+          are recorded in 2008. This makes it seem like there is a large transition in 2018 where
+          the NY subway system all of a sudden has the largest ridership, so a viewer not paying attention
+          might assume that B&T has had the highest ridership in all the years even tho this might not be true.
+          Other challenges would be making the visualizations more meaningful such as adding callouts for context
+          (ridership would fall for all transit during the pandemic), doing research to add when certain policies 
+          were in place, and incorporating sentiment data that we have previously analyzed to show how policy 
+          actually affects riders in other ways than just raw numbers in participation. The most challenging thing
+          will be designing a visualization which frames this information without being overwhelming which
+          might entail adding animations or timed transitions.
+>>>>>>> 00ba7880146a7afc6a4340c2e8d19c37ce4610ba
         </p>
       </div>
     </div>
@@ -523,5 +715,810 @@
 
   <script src="index.js"></script>
 
+<<<<<<< HEAD
 </body>
 </html>
+=======
+let allData = [],
+    activeAgency = 'Subway',
+    activeYear = 2024;
+
+let globalMax = 0,
+    chartBuilt = false;
+
+let agencyYearRanges = {};
+
+let svg, xScale, yScale, lineGen, areaGen;
+
+const margin = { top: 20, right: 20, bottom: 36, left: 64 };
+const height = 340 - margin.top - margin.bottom;
+
+// =========================
+// BUTTONS
+// =========================
+
+const btnContainer = document.getElementById('mode-buttons');
+
+// ALL button
+const allBtn = document.createElement('button');
+
+allBtn.className = 'mode-btn';
+allBtn.textContent = 'All';
+
+allBtn.addEventListener('click', () => {
+  activeAgency = 'ALL';
+
+  document.querySelectorAll('.mode-btn')
+    .forEach(b => b.classList.remove('active'));
+
+  allBtn.classList.add('active');
+
+  updateSliderRange();
+  updateGlobalMax();
+  render();
+});
+
+btnContainer.appendChild(allBtn);
+
+// Agency buttons
+AGENCIES.forEach(agency => {
+  const btn = document.createElement('button');
+
+  btn.className =
+    'mode-btn' + (agency === activeAgency ? ' active' : '');
+
+  btn.textContent = agency;
+
+  btn.addEventListener('click', () => {
+    activeAgency = agency;
+
+    document.querySelectorAll('.mode-btn')
+      .forEach(b => b.classList.remove('active'));
+
+    btn.classList.add('active');
+
+    updateSliderRange();
+    updateGlobalMax();
+    render();
+  });
+
+  btnContainer.appendChild(btn);
+});
+
+// =========================
+// SLIDER
+// =========================
+
+const slider = document.getElementById('year-slider');
+const yearDisplay = document.getElementById('year-display');
+
+slider.addEventListener('input', () => {
+  activeYear = +slider.value;
+  yearDisplay.textContent = activeYear;
+  render();
+});
+
+// =========================
+// LOAD CSV
+// =========================
+
+d3.csv(
+  "data/MTA_Monthly_Ridership___Traffic_Data__Beginning_January_2008_20260517.csv",
+  d => {
+    const date = new Date(d.Month);
+
+    return {
+      date,
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      agency: d.Agency ? d.Agency.trim() : '',
+      ridership: +String(d.Ridership).replace(/,/g, '') || 0
+    };
+  }
+).then(parsed => {
+
+  allData = parsed.filter(
+    d => !isNaN(d.date) && d.ridership > 0
+  );
+
+  // Build year ranges for each agency
+  AGENCIES.forEach(agency => {
+
+    const agencyYears = allData
+      .filter(d => d.agency === agency)
+      .map(d => d.year);
+
+    if (agencyYears.length) {
+      agencyYearRanges[agency] = {
+        min: d3.min(agencyYears),
+        max: d3.max(agencyYears)
+      };
+    }
+  });
+
+  // ALL range
+  const allYears = allData.map(d => d.year);
+
+  agencyYearRanges['ALL'] = {
+    min: d3.min(allYears),
+    max: d3.max(allYears)
+  };
+
+  activeYear = agencyYearRanges['Subway'].max;
+
+  updateSliderRange();
+  updateGlobalMax();
+  buildChart();
+  render();
+});
+
+// =========================
+// HELPERS
+// =========================
+
+function updateSliderRange() {
+
+  const range =
+    agencyYearRanges[activeAgency] ||
+    agencyYearRanges['ALL'];
+
+  slider.min = range.min;
+  slider.max = range.max;
+
+  // IMPORTANT: update visible range labels
+  const minLabel = document.getElementById('slider-min');
+  const maxLabel = document.getElementById('slider-max');
+
+  if (minLabel) minLabel.textContent = range.min;
+  if (maxLabel) maxLabel.textContent = range.max;
+
+  // Clamp year into valid range
+  if (activeYear < range.min) {
+    activeYear = range.min;
+  }
+
+  if (activeYear > range.max) {
+    activeYear = range.max;
+  }
+
+  slider.value = activeYear;
+  yearDisplay.textContent = activeYear;
+}
+
+function updateGlobalMax() {
+
+  if (activeAgency === 'ALL') {
+
+    globalMax =
+      d3.max(allData, d => d.ridership) || 1;
+
+  } else {
+
+    globalMax =
+      d3.max(
+        allData.filter(d => d.agency === activeAgency),
+        d => d.ridership
+      ) || 1;
+  }
+}
+
+// =========================
+// BUILD CHART
+// =========================
+
+function buildChart() {
+
+  document.getElementById('chart').innerHTML = '';
+
+  const W =
+    document.querySelector('.viz-block').clientWidth - 40;
+
+  const innerW =
+    W - margin.left - margin.right;
+
+  svg = d3.select('#chart')
+    .append('svg')
+    .attr('viewBox', `0 0 ${W} 340`)
+    .attr('width', W)
+    .attr('height', 340);
+
+  const defs = svg.append('defs');
+
+  const grad = defs.append('linearGradient')
+    .attr('id','areaGradient')
+    .attr('x1','0')
+    .attr('y1','0')
+    .attr('x2','0')
+    .attr('y2','1');
+
+  grad.append('stop')
+    .attr('offset','0%')
+    .attr('stop-color','#c8963e')
+    .attr('stop-opacity',0.25);
+
+  grad.append('stop')
+    .attr('offset','100%')
+    .attr('stop-color','#c8963e')
+    .attr('stop-opacity',0.02);
+
+  const g = svg.append('g')
+    .attr(
+      'transform',
+      `translate(${margin.left},${margin.top})`
+    );
+
+  xScale = d3.scalePoint()
+    .domain(MONTH_NAMES)
+    .range([0, innerW])
+    .padding(0.1);
+
+  yScale = d3.scaleLinear()
+    .domain([0, globalMax * 1.08])
+    .range([height, 0]);
+
+  g.append('g')
+    .attr('class','grid')
+    .call(
+      d3.axisLeft(yScale)
+        .ticks(5)
+        .tickSize(-innerW)
+        .tickFormat('')
+    );
+
+  g.append('g')
+    .attr('class','axis')
+    .attr('transform',`translate(0,${height})`)
+    .call(
+      d3.axisBottom(xScale)
+        .tickSize(0)
+        .tickPadding(10)
+    );
+
+  g.append('g')
+    .attr('class','axis y-axis')
+    .call(
+      d3.axisLeft(yScale)
+        .ticks(5)
+        .tickFormat(d =>
+          d >= 1e6
+            ? (d/1e6).toFixed(1)+'M'
+            : d >= 1e3
+            ? (d/1e3).toFixed(0)+'K'
+            : d
+        )
+    );
+
+  lineGen = d3.line()
+    .x(d => xScale(MONTH_NAMES[d.month]))
+    .y(d => yScale(d.ridership))
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  areaGen = d3.area()
+    .x(d => xScale(MONTH_NAMES[d.month]))
+    .y0(height)
+    .y1(d => yScale(d.ridership))
+    .curve(d3.curveCatmullRom.alpha(0.5));
+
+  g.append('path')
+    .attr('class','area-path')
+    .attr('id','area-path');
+
+  g.append('path')
+    .attr('class','line-path')
+    .attr('id','line-path');
+
+  g.append('g')
+    .attr('id','dots-group');
+
+  chartBuilt = true;
+}
+
+// =========================
+// RENDER
+// =========================
+
+function render() {
+
+  if (!chartBuilt) return;
+
+  const g = svg.select('g');
+
+  yScale.domain([0, globalMax * 1.08]);
+
+  d3.select('.y-axis').call(
+    d3.axisLeft(yScale)
+      .ticks(5)
+      .tickFormat(d =>
+        d >= 1e6
+          ? (d/1e6).toFixed(1)+'M'
+          : d >= 1e3
+          ? (d/1e3).toFixed(0)+'K'
+          : d
+      )
+  );
+
+  g.selectAll('.agency-line-group').remove();
+
+  d3.select('#legend').remove();
+
+// =========================
+// ALL MODE
+// =========================
+
+if (activeAgency === 'ALL') {
+
+  d3.select('#line-path').attr('d', null);
+  d3.select('#area-path').attr('d', null);
+
+  d3.select('#dots-group')
+    .selectAll('circle')
+    .remove();
+
+  const yearlyTotal = d3.sum(
+    allData.filter(d => d.year === activeYear),
+    d => d.ridership
+  );
+
+  const totalEl = document.getElementById('annual-total');
+
+  if (totalEl) {
+    totalEl.textContent =
+      yearlyTotal >= 1e9
+        ? (yearlyTotal / 1e9).toFixed(2) + 'B total riders'
+        : yearlyTotal >= 1e6
+        ? (yearlyTotal / 1e6).toFixed(1) + 'M total riders'
+        : yearlyTotal.toLocaleString() + ' total riders';
+  }
+
+  // =========================
+  // RENDER EACH AGENCY LINE
+  // =========================
+
+  AGENCIES.forEach(agency => {
+
+    const yearData = allData
+      .filter(d =>
+        d.agency === agency &&
+        d.year === activeYear
+      )
+      .sort((a, b) => a.month - b.month);
+
+    if (!yearData.length) return;
+
+    const agGroup = g.append('g')
+      .attr('class','agency-line-group');
+
+    agGroup.append('path')
+      .datum(yearData)
+      .attr('fill','none')
+      .attr('stroke', COLORS[agency] || '#fff')
+      .attr('stroke-width', 2)
+      .attr('stroke-linecap','round')
+      .attr('stroke-linejoin','round')
+      .attr('d', lineGen);
+
+    agGroup.selectAll('circle')
+      .data(yearData)
+      .enter()
+      .append('circle')
+      .attr('r', 3.5)
+      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
+      .attr('cy', d => yScale(d.ridership))
+      .attr('fill', COLORS[agency] || '#fff')
+      .attr('stroke', '#112236')
+      .attr('stroke-width', 1.5)
+
+      .on('mouseover', function(event, d) {
+
+        d3.select(this).attr('r', 6);
+
+        const tt = document.getElementById('tooltip');
+
+        document.getElementById('tt-month')
+          .textContent =
+            agency +
+            ' · ' +
+            MONTH_NAMES[d.month] +
+            ' ' +
+            d.year;
+
+        document.getElementById('tt-val')
+          .textContent =
+            d.ridership.toLocaleString() +
+            ' riders';
+
+        tt.style.opacity = 1;
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
+      })
+
+      .on('mousemove', function(event) {
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        const tt = document.getElementById('tooltip');
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
+      })
+
+      .on('mouseout', function() {
+
+        d3.select(this).attr('r', 3.5);
+
+        document.getElementById('tooltip')
+          .style.opacity = 0;
+      });
+  });
+
+  const legend = d3.select('.chart-container')
+    .append('div')
+    .attr('id','legend');
+
+  AGENCIES.forEach(agency => {
+
+    const item = legend.append('div')
+      .attr('class','legend-item');
+
+    item.append('span')
+      .attr('class','legend-dot')
+      .style('background', COLORS[agency] || '#fff');
+
+    item.append('span')
+      .attr('class','legend-label')
+      .text(agency);
+  });
+}
+
+  // =========================
+  // SINGLE AGENCY MODE
+  // =========================
+
+  else {
+
+    const yearData = allData
+      .filter(
+        d =>
+          d.agency === activeAgency &&
+          d.year === activeYear
+      )
+      .sort((a, b) => a.month - b.month);
+
+    if (!yearData.length) {
+
+      d3.select('#line-path').attr('d', null);
+
+      d3.select('#area-path').attr('d', null);
+
+      d3.select('#dots-group')
+        .selectAll('circle')
+        .remove();
+
+      document.getElementById('annual-total')
+        .textContent = '—';
+
+      return;
+    }
+
+    const total =
+      d3.sum(yearData, d => d.ridership);
+
+    document.getElementById('annual-total')
+      .textContent =
+        total >= 1e9
+          ? (total/1e9).toFixed(2)+'B'
+          : total >= 1e6
+          ? (total/1e6).toFixed(1)+'M'
+          : total.toLocaleString();
+
+    d3.select('#line-path')
+      .datum(yearData)
+      .transition()
+      .duration(300)
+      .ease(d3.easeCubicOut)
+      .attr('d', lineGen);
+
+    d3.select('#area-path')
+      .datum(yearData)
+      .transition()
+      .duration(300)
+      .ease(d3.easeCubicOut)
+      .attr('d', areaGen);
+
+    const dots = d3.select('#dots-group')
+      .selectAll('circle')
+      .data(yearData, d => d.month);
+
+    dots.enter()
+      .append('circle')
+      .attr('class','dot')
+      .attr('r',4)
+      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
+      .attr('cy', d => yScale(d.ridership))
+
+      .on('mouseover', function(event, d) {
+
+        d3.select(this).attr('r', 6);
+
+        const tt =
+          document.getElementById('tooltip');
+
+        document.getElementById('tt-month')
+          .textContent =
+            MONTH_NAMES[d.month] +
+            ' ' +
+            d.year;
+
+        document.getElementById('tt-val')
+          .textContent =
+            d.ridership.toLocaleString() +
+            ' riders';
+
+        tt.style.opacity = 1;
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
+      })
+
+      .on('mousemove', function(event) {
+
+        const rect =
+          document.querySelector('.chart-container')
+            .getBoundingClientRect();
+
+        const tt =
+          document.getElementById('tooltip');
+
+        tt.style.left =
+          (event.clientX - rect.left + 12) + 'px';
+
+        tt.style.top =
+          (event.clientY - rect.top - 36) + 'px';
+      })
+
+      .on('mouseout', function() {
+
+        d3.select(this).attr('r', 4);
+
+        document.getElementById('tooltip')
+          .style.opacity = 0;
+      })
+
+      .merge(dots)
+
+      .transition()
+      .duration(300)
+      .ease(d3.easeCubicOut)
+
+      .attr('cx', d => xScale(MONTH_NAMES[d.month]))
+      .attr('cy', d => yScale(d.ridership));
+
+    dots.exit().remove();
+    updateAnalysis()
+  }
+}
+
+// ── PEAK YEAR BUTTON ──
+function getPeakYear(agency) {
+  if (agency === 'ALL') {
+    // sum ridership across all agencies per year, find max
+    const byYear = d3.rollup(allData, v => d3.sum(v, d => d.ridership), d => d.year);
+    return [...byYear.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
+  }
+  const agencyData = allData.filter(d => d.agency === agency);
+  if (!agencyData.length) return null;
+  const byYear = d3.rollup(agencyData, v => d3.sum(v, d => d.ridership), d => d.year);
+  return [...byYear.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
+}
+
+document.getElementById('peak-btn').addEventListener('click', () => {
+  const peak = getPeakYear(activeAgency);
+  if (!peak) return;
+  activeYear = peak;
+  slider.value = peak;
+  yearDisplay.textContent = peak;
+  updateGlobalMax();
+  render();
+  const label = document.getElementById('peak-label');
+  label.textContent = `Peak year for ${activeAgency === 'ALL' ? 'all agencies' : activeAgency}: ${peak}`;
+});
+
+
+// CONTEXTUAL ANALYSIS for callouts
+const ANALYSIS = {
+  'ALL': {
+    2020: "By April 2020, the MTA experienced a 90% decrease in subway and bus ridership and a 95% decrease in commuter rail passengers. The MTA faced a cumulative $16.2 billion budget gap from 2020 through 2024 as a result of lost farebox revenue and $567M in unplanned COVID cleaning costs in 2020 alone. (Source: CBC Testimony, Denise Richardson)",
+    2019: "2019 was the last full pre-pandemic year. Use the Peak Year button on each agency to compare how far each mode's ridership still is from its pre-pandemic high.",
+    2022: "Even with ridership returning, the MTA projected a $1.8 billion structural gap even under a full ridership recovery scenario, meaning fare revenue alone could not close the deficit created by the pandemic.",
+    2025: "2025 represents the MTA's strongest post-pandemic ridership year in this dataset. Compare to 2019 using the Peak Year button to see how much ground has been recovered.",
+  },
+  'Subway': {
+    2020: "Subway ridership fell 90% by April 2020. The MTA estimated COVID-related cleaning costs of $567M in 2020, $591M in 2021, $518M in 2022, and $500M annually through 2024. (Source: CBC Testimony)",
+    2019: "2019 was the subway's peak year in this dataset. Drag the slider forward to watch the collapse in 2020 and the slow recovery through 2025.",
+    2025: "The MTA's 2025–2029 Capital Plan allocated $11.93B to passenger stations and $7.2B to subway cars, the ninth capital plan in MTA history.",
+  },
+  'Bus': {
+    2020: "Bus ridership dropped 90% alongside the subway in April 2020, though toll traffic was more resilient (only 15% below pre-pandemic levels at the same time), reflecting that essential drivers returned to roads faster than transit riders. (Source: CBC Testimony)",
+    2019: "2019 was the last full pre-pandemic year for bus ridership. Note that bus recovery post-2020 has been slower than subway recovery, which is visible by comparing their respective Peak Year readings.",
+  },
+  'LIRR': {
+    2020: "Commuter rail saw the steepest drop of any MTA mode: a 95% decrease in passengers by April 2020, compared to 90% for subway and bus. This reflects commuter rail's near-total dependence on Manhattan office trips. (Source: CBC Testimony)",
+  },
+  'MNR': {
+    2020: "Like the LIRR, Metro-North experienced a 95% ridership decline by April 2020. Toll traffic on bridges and tunnels recovered much faster, dropping only 15% at the same point. This stark contrast is visible across the agency tabs.",
+  },
+  'BT': {
+    2020: "Bridge and tunnel traffic fell 65% by April 2020, far less than the 90–95% drops seen on transit. By mid-2020, tolls were only 15% below pre-pandemic levels, making B&T the MTA's most financially resilient revenue source during the crisis. (Source: CBC Testimony)",
+  },
+};
+
+function updateAnalysis() {
+  const callout = document.getElementById('analysis-callout');
+  const textEl = document.getElementById('analysis-text');
+  const agencyNotes = ANALYSIS[activeAgency] || ANALYSIS['ALL'];
+  const note = agencyNotes?.[activeYear];
+  if (note) {
+    textEl.textContent = note;
+    callout.style.display = 'flex';
+    // re-trigger animation
+    callout.style.animation = 'none';
+    callout.offsetHeight; // reflow
+    callout.style.animation = '';
+  } else {
+    callout.style.display = 'none';
+  }
+}
+
+//FUNDING CUT SIMULATOR
+(function () {
+  const SIM_ROUTES = [
+  { id: 'A',  name: 'A',  color: '#0062CF', text: '#FFFFFF', headway: 13.1, stops: 66 },
+  { id: 'C',  name: 'C',  color: '#0062CF', text: '#FFFFFF', headway: 9.1,  stops: 40 },
+  { id: 'E',  name: 'E',  color: '#0062CF', text: '#FFFFFF', headway: 11.5, stops: 36 },
+  { id: 'B',  name: 'B',  color: '#EB6800', text: '#FFFFFF', headway: 9.3,  stops: 37 },
+  { id: 'D',  name: 'D',  color: '#EB6800', text: '#FFFFFF', headway: 10.5, stops: 41 },
+  { id: 'F',  name: 'F',  color: '#EB6800', text: '#FFFFFF', headway: 9.2,  stops: 59 },
+  { id: 'M',  name: 'M',  color: '#EB6800', text: '#FFFFFF', headway: 8.5,  stops: 36 },
+  { id: 'G',  name: 'G',  color: '#6CBE45', text: '#FFFFFF', headway: 9.6,  stops: 21 },
+  { id: 'J',  name: 'J',  color: '#996633', text: '#FFFFFF', headway: 10.3, stops: 30 },
+  { id: 'Z',  name: 'Z',  color: '#996633', text: '#FFFFFF', headway: 10.1, stops: 21 },
+  { id: 'L',  name: 'L',  color: '#A7A9AC', text: '#FFFFFF', headway: 5.3,  stops: 24 },
+  { id: 'N',  name: 'N',  color: '#FCCC0A', text: '#000000', headway: 14.8, stops: 50 },
+  { id: 'Q',  name: 'Q',  color: '#FCCC0A', text: '#000000', headway: 10.4, stops: 34 },
+  { id: 'R',  name: 'R',  color: '#FCCC0A', text: '#000000', headway: 8.6,  stops: 52 },
+  { id: 'W',  name: 'W',  color: '#FCCC0A', text: '#000000', headway: 17.1, stops: 47 },
+  { id: '1',  name: '1',  color: '#EE352E', text: '#FFFFFF', headway: 6.3,  stops: 38 },
+  { id: '2',  name: '2',  color: '#EE352E', text: '#FFFFFF', headway: 12.7, stops: 71 },
+  { id: '3',  name: '3',  color: '#EE352E', text: '#FFFFFF', headway: 8.3,  stops: 34 },
+  { id: '4',  name: '4',  color: '#00933C', text: '#FFFFFF', headway: 12.5, stops: 54 },
+  { id: '5',  name: '5',  color: '#00933C', text: '#FFFFFF', headway: 14.6, stops: 55 },
+  { id: '6',  name: '6',  color: '#00933C', text: '#FFFFFF', headway: 7.0,  stops: 38 },
+  { id: '7',  name: '7',  color: '#B933AD', text: '#FFFFFF', headway: 5.4,  stops: 22 },
+  { id: 'GS', name: 'S',  color: '#808183', text: '#FFFFFF', headway: 4.3,  stops: 2  },
+  { id: 'FS', name: 'FS', color: '#808183', text: '#FFFFFF', headway: 12.0, stops: 4  },
+  { id: 'H',  name: 'H',  color: '#808183', text: '#FFFFFF', headway: 17.1, stops: 9  },
+  { id: 'FX', name: 'FX', color: '#EB6800', text: '#FFFFFF', headway: 27.5, stops: 39 },
+  { id: '6X', name: '6X', color: '#00933C', text: '#FFFFFF', headway: 7.5,  stops: 29 },
+  { id: '7X', name: '7X', color: '#B933AD', text: '#FFFFFF', headway: 5.8,  stops: 18 },
+];
+
+  const DAILY_RIDERS = 3500000;
+  const HOURLY_WAGE = 38.65;
+  const TOTAL_STOPS = SIM_ROUTES.reduce((s, r) => s + r.stops, 0);
+  const cut = new Set();
+
+  // build buttons
+  const container = document.getElementById('sim-route-buttons');
+  if (!container) return;
+
+  SIM_ROUTES.forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'sim-route-btn';
+    btn.id = 'sim-btn-' + r.id;
+    btn.textContent = r.name;
+    btn.style.background = r.color;
+    btn.style.color = r.text;
+    btn.title = r.name + ' train — avg headway ' + r.headway + ' min, ' + r.stops + ' stops';
+    btn.addEventListener('click', () => {
+      if (cut.has(r.id)) {
+        cut.delete(r.id);
+        btn.classList.remove('cut');
+      } else {
+        cut.add(r.id);
+        btn.classList.add('cut');
+      }
+      simUpdate();
+    });
+    container.appendChild(btn);
+  });
+
+  function fmtN(n) { return Math.round(n).toLocaleString(); }
+  function fmtM(n) {
+    return n >= 1e9
+      ? '$' + (n / 1e9).toFixed(2) + 'B'
+      : '$' + (n / 1e6).toFixed(0) + 'M';
+  }
+
+  function getEquiv(lostHours) {
+    const teachers = Math.round(lostHours / 1800);
+    if (teachers >= 100) {
+      return {
+        val: fmtN(teachers) + ' teacher-years',
+        ctx: 'The collective time lost to longer waits equals ' + fmtN(teachers) +
+          ' full teacher work-years every year.'
+      };
+    }
+    const marathons = Math.round(lostHours / 4.5);
+    return {
+      val: fmtN(marathons) + ' marathons worth of time',
+      ctx: 'Riders collectively lose the equivalent of ' + fmtN(marathons) +
+        ' marathon finishing times in extra waiting — every single year.'
+    };
+  }
+
+  function simUpdate() {
+    const cutRoutes = SIM_ROUTES.filter(r => cut.has(r.id));
+    const nCut = cutRoutes.length;
+
+    document.getElementById('sim-cut').textContent = nCut;
+
+    if (nCut === 0) {
+      document.getElementById('sim-stops').textContent = '0';
+      document.getElementById('sim-wait').textContent = '+0.0 min';
+      document.getElementById('sim-riders').textContent = '0';
+      document.getElementById('sim-roi').style.display = 'none';
+      document.getElementById('sim-no-cuts').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('sim-no-cuts').style.display = 'none';
+    document.getElementById('sim-roi').style.display = 'block';
+
+    const affectedStops = cutRoutes.reduce((s, r) => s + r.stops, 0);
+    const avgHeadway = cutRoutes.reduce((s, r) => s + r.headway, 0) / nCut;
+    const waitIncrease = avgHeadway / 2;
+    const affectedRiders = Math.round(DAILY_RIDERS * (affectedStops / TOTAL_STOPS) * 0.6);
+
+    document.getElementById('sim-stops').textContent = fmtN(affectedStops);
+    document.getElementById('sim-wait').textContent = '+' + waitIncrease.toFixed(1) + ' min';
+    document.getElementById('sim-riders').textContent = fmtN(affectedRiders);
+
+    const lostHoursYear = (affectedRiders * waitIncrease * 2 / 60) * 365;
+    const econCost = lostHoursYear * HOURLY_WAGE;
+    const eq = getEquiv(lostHoursYear);
+
+    document.getElementById('sim-hours').textContent = fmtN(lostHoursYear) + ' hrs';
+    document.getElementById('sim-econ').textContent = fmtM(econCost) + '/yr';
+    document.getElementById('sim-equiv').textContent = eq.val;
+    document.getElementById('sim-context').textContent = eq.ctx;
+
+    document.getElementById('sim-hours-back').textContent = fmtN(lostHoursYear) + ' hrs';
+    document.getElementById('sim-econ-back').textContent = fmtM(econCost) + '/yr';
+    document.getElementById('sim-riders-back').textContent = fmtN(affectedRiders) + ' riders';
+  }
+
+  simUpdate();
+})();
+
+</script>
+>>>>>>> 00ba7880146a7afc6a4340c2e8d19c37ce4610ba

@@ -540,6 +540,7 @@ input[type=range]::-moz-range-thumb {
   margin: 0 !important;
 }
 
+<<<<<<< HEAD
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ═══════════════════════════════
@@ -941,6 +942,8 @@ input[type=range]::-moz-range-thumb {
   padding: 16px 20px;
 }
 
+=======
+>>>>>>> 00ba7880146a7afc6a4340c2e8d19c37ce4610ba
 .sim-route-btn {
   display: inline-flex;
   align-items: center;
@@ -956,12 +959,16 @@ input[type=range]::-moz-range-thumb {
   flex-shrink: 0;
   font-family: 'DM Sans', sans-serif;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 00ba7880146a7afc6a4340c2e8d19c37ce4610ba
 .sim-route-btn.cut {
   opacity: 0.2;
   filter: grayscale(1);
   transform: scale(0.9);
 }
+<<<<<<< HEAD
 
 .sim-route-btn:hover { transform: scale(1.1); }
 .sim-route-btn.cut:hover { transform: scale(0.95); }
@@ -1096,3 +1103,12 @@ input[type=range]::-moz-range-thumb {
     width: 100%;
   }
 }
+=======
+.sim-route-btn:hover {
+  transform: scale(1.1);
+}
+.sim-route-btn.cut:hover {
+  transform: scale(0.95);
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+>>>>>>> 00ba7880146a7afc6a4340c2e8d19c37ce4610ba
