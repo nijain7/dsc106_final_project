@@ -43,6 +43,8 @@
         <a href="https://data.ny.gov/Transportation/MTA-Pulse-Survey-Beginning-2025/5754-yujh/about_data">MTA Pulse Survey Beginning 2025</a>
       </p>
 
+      
+
       <h2>MTA Monthly Ridership from 2008 to 2026</h2>
 
       <p>
@@ -99,6 +101,107 @@
         <span class="analysis-icon">📊</span>
         <p id="analysis-text"></p>
       </div>
+
+      <h2>What Happens When We Cut Subway Lines?</h2>
+<p>
+  Funding cuts don't just reduce service on paper, they translate directly into 
+  longer waits, lost time, and real economic costs for millions of daily riders. 
+  Select lines below to simulate what happens when routes are reduced or eliminated 
+  and see the cascading impact on commuters across the city.
+</p>
+
+<div class="viz-block" style="min-height: unset;">
+  <div style="padding: 0.5rem 0;">
+
+    <p style="font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 10px;">
+      Click lines to cut them; impact updates in real time
+    </p>
+
+    <div id="sim-route-buttons" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem;"></div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem;">
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Lines cut</div>
+        <div class="chart-stat-num" id="sim-cut" style="color: #e07b7b;">0</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Stops affected</div>
+        <div class="chart-stat-num" id="sim-stops">0</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Avg wait increase</div>
+        <div class="chart-stat-num" id="sim-wait" style="color: #e07b7b;">+0.0 min</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="chart-stat-label">Daily riders affected</div>
+        <div class="chart-stat-num" id="sim-riders">0</div>
+      </div>
+    </div>
+
+    <div id="sim-roi" style="display: none;">
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; margin-bottom: 12px; margin-top: 0;">
+        What this costs the city
+      </h3>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 12px;">
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Lost hours / year</div>
+          <div class="chart-stat-num" id="sim-hours" style="color: #e07b7b;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Economic cost / year</div>
+          <div class="chart-stat-num" id="sim-econ" style="color: #e07b7b;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Equivalent to...</div>
+          <div class="chart-stat-num" id="sim-equiv" style="font-size: 15px;">—</div>
+        </div>
+      </div>
+
+      <div id="sim-context" style="
+        border-left: 3px solid var(--accent);
+        border-radius: 0;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.75);
+        background: rgba(200,150,62,0.08);
+        margin-bottom: 1.5rem;
+      "></div>
+
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; margin-bottom: 12px; margin-top: 0;">
+        Restore funding: what riders get back
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Hours returned / year</div>
+          <div class="chart-stat-num" id="sim-hours-back" style="color: #7bc67e;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Economic value restored</div>
+          <div class="chart-stat-num" id="sim-econ-back" style="color: #7bc67e;">—</div>
+        </div>
+        <div class="chart-stat-card">
+          <div class="chart-stat-label">Riders regain access</div>
+          <div class="chart-stat-num" id="sim-riders-back" style="color: #7bc67e;">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sim-no-cuts" style="font-size: 13px; color: rgba(255,255,255,0.4); font-style: italic; margin-top: 4px;">
+      No lines cut yet. Try removing the W, N, or J train to see the impact.
+    </div>
+
+    <p style="font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+      Headways computed from MTA GTFS schedule data (stop_times.txt, 563,534 records). 
+      Daily ridership: 3.5M subway riders / day (MTA Monthly Ridership dataset). 
+      Riders affected estimated at 60% of route's stop share (accounting for transfer availability). 
+      Economic cost uses NYC mean wage $38.65/hr (BLS 2024). 
+      Wait increase = avg headway of cut lines ÷ 2 (expected wait for random arrival).
+    </p>
+  </div>
+</div>
+<p class="viz-caption">Figure 3: Click subway lines to simulate funding cuts. All headway values from MTA GTFS data.</p>
 
       <div class="writeup">
 
@@ -787,6 +890,7 @@ document.getElementById('peak-btn').addEventListener('click', () => {
   label.textContent = `Peak year for ${activeAgency === 'ALL' ? 'all agencies' : activeAgency}: ${peak}`;
 });
 
+
 // CONTEXTUAL ANALYSIS for callouts
 const ANALYSIS = {
   'ALL': {
@@ -831,4 +935,136 @@ function updateAnalysis() {
     callout.style.display = 'none';
   }
 }
+
+//FUNDING CUT SIMULATOR
+(function () {
+  const SIM_ROUTES = [
+  { id: 'A',  name: 'A',  color: '#0062CF', text: '#FFFFFF', headway: 13.1, stops: 66 },
+  { id: 'C',  name: 'C',  color: '#0062CF', text: '#FFFFFF', headway: 9.1,  stops: 40 },
+  { id: 'E',  name: 'E',  color: '#0062CF', text: '#FFFFFF', headway: 11.5, stops: 36 },
+  { id: 'B',  name: 'B',  color: '#EB6800', text: '#FFFFFF', headway: 9.3,  stops: 37 },
+  { id: 'D',  name: 'D',  color: '#EB6800', text: '#FFFFFF', headway: 10.5, stops: 41 },
+  { id: 'F',  name: 'F',  color: '#EB6800', text: '#FFFFFF', headway: 9.2,  stops: 59 },
+  { id: 'M',  name: 'M',  color: '#EB6800', text: '#FFFFFF', headway: 8.5,  stops: 36 },
+  { id: 'G',  name: 'G',  color: '#6CBE45', text: '#FFFFFF', headway: 9.6,  stops: 21 },
+  { id: 'J',  name: 'J',  color: '#996633', text: '#FFFFFF', headway: 10.3, stops: 30 },
+  { id: 'Z',  name: 'Z',  color: '#996633', text: '#FFFFFF', headway: 10.1, stops: 21 },
+  { id: 'L',  name: 'L',  color: '#A7A9AC', text: '#FFFFFF', headway: 5.3,  stops: 24 },
+  { id: 'N',  name: 'N',  color: '#FCCC0A', text: '#000000', headway: 14.8, stops: 50 },
+  { id: 'Q',  name: 'Q',  color: '#FCCC0A', text: '#000000', headway: 10.4, stops: 34 },
+  { id: 'R',  name: 'R',  color: '#FCCC0A', text: '#000000', headway: 8.6,  stops: 52 },
+  { id: 'W',  name: 'W',  color: '#FCCC0A', text: '#000000', headway: 17.1, stops: 47 },
+  { id: '1',  name: '1',  color: '#EE352E', text: '#FFFFFF', headway: 6.3,  stops: 38 },
+  { id: '2',  name: '2',  color: '#EE352E', text: '#FFFFFF', headway: 12.7, stops: 71 },
+  { id: '3',  name: '3',  color: '#EE352E', text: '#FFFFFF', headway: 8.3,  stops: 34 },
+  { id: '4',  name: '4',  color: '#00933C', text: '#FFFFFF', headway: 12.5, stops: 54 },
+  { id: '5',  name: '5',  color: '#00933C', text: '#FFFFFF', headway: 14.6, stops: 55 },
+  { id: '6',  name: '6',  color: '#00933C', text: '#FFFFFF', headway: 7.0,  stops: 38 },
+  { id: '7',  name: '7',  color: '#B933AD', text: '#FFFFFF', headway: 5.4,  stops: 22 },
+  { id: 'GS', name: 'S',  color: '#808183', text: '#FFFFFF', headway: 4.3,  stops: 2  },
+  { id: 'FS', name: 'FS', color: '#808183', text: '#FFFFFF', headway: 12.0, stops: 4  },
+  { id: 'H',  name: 'H',  color: '#808183', text: '#FFFFFF', headway: 17.1, stops: 9  },
+  { id: 'FX', name: 'FX', color: '#EB6800', text: '#FFFFFF', headway: 27.5, stops: 39 },
+  { id: '6X', name: '6X', color: '#00933C', text: '#FFFFFF', headway: 7.5,  stops: 29 },
+  { id: '7X', name: '7X', color: '#B933AD', text: '#FFFFFF', headway: 5.8,  stops: 18 },
+];
+
+  const DAILY_RIDERS = 3500000;
+  const HOURLY_WAGE = 38.65;
+  const TOTAL_STOPS = SIM_ROUTES.reduce((s, r) => s + r.stops, 0);
+  const cut = new Set();
+
+  // build buttons
+  const container = document.getElementById('sim-route-buttons');
+  if (!container) return;
+
+  SIM_ROUTES.forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'sim-route-btn';
+    btn.id = 'sim-btn-' + r.id;
+    btn.textContent = r.name;
+    btn.style.background = r.color;
+    btn.style.color = r.text;
+    btn.title = r.name + ' train — avg headway ' + r.headway + ' min, ' + r.stops + ' stops';
+    btn.addEventListener('click', () => {
+      if (cut.has(r.id)) {
+        cut.delete(r.id);
+        btn.classList.remove('cut');
+      } else {
+        cut.add(r.id);
+        btn.classList.add('cut');
+      }
+      simUpdate();
+    });
+    container.appendChild(btn);
+  });
+
+  function fmtN(n) { return Math.round(n).toLocaleString(); }
+  function fmtM(n) {
+    return n >= 1e9
+      ? '$' + (n / 1e9).toFixed(2) + 'B'
+      : '$' + (n / 1e6).toFixed(0) + 'M';
+  }
+
+  function getEquiv(lostHours) {
+    const teachers = Math.round(lostHours / 1800);
+    if (teachers >= 100) {
+      return {
+        val: fmtN(teachers) + ' teacher-years',
+        ctx: 'The collective time lost to longer waits equals ' + fmtN(teachers) +
+          ' full teacher work-years every year.'
+      };
+    }
+    const marathons = Math.round(lostHours / 4.5);
+    return {
+      val: fmtN(marathons) + ' marathons worth of time',
+      ctx: 'Riders collectively lose the equivalent of ' + fmtN(marathons) +
+        ' marathon finishing times in extra waiting — every single year.'
+    };
+  }
+
+  function simUpdate() {
+    const cutRoutes = SIM_ROUTES.filter(r => cut.has(r.id));
+    const nCut = cutRoutes.length;
+
+    document.getElementById('sim-cut').textContent = nCut;
+
+    if (nCut === 0) {
+      document.getElementById('sim-stops').textContent = '0';
+      document.getElementById('sim-wait').textContent = '+0.0 min';
+      document.getElementById('sim-riders').textContent = '0';
+      document.getElementById('sim-roi').style.display = 'none';
+      document.getElementById('sim-no-cuts').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('sim-no-cuts').style.display = 'none';
+    document.getElementById('sim-roi').style.display = 'block';
+
+    const affectedStops = cutRoutes.reduce((s, r) => s + r.stops, 0);
+    const avgHeadway = cutRoutes.reduce((s, r) => s + r.headway, 0) / nCut;
+    const waitIncrease = avgHeadway / 2;
+    const affectedRiders = Math.round(DAILY_RIDERS * (affectedStops / TOTAL_STOPS) * 0.6);
+
+    document.getElementById('sim-stops').textContent = fmtN(affectedStops);
+    document.getElementById('sim-wait').textContent = '+' + waitIncrease.toFixed(1) + ' min';
+    document.getElementById('sim-riders').textContent = fmtN(affectedRiders);
+
+    const lostHoursYear = (affectedRiders * waitIncrease * 2 / 60) * 365;
+    const econCost = lostHoursYear * HOURLY_WAGE;
+    const eq = getEquiv(lostHoursYear);
+
+    document.getElementById('sim-hours').textContent = fmtN(lostHoursYear) + ' hrs';
+    document.getElementById('sim-econ').textContent = fmtM(econCost) + '/yr';
+    document.getElementById('sim-equiv').textContent = eq.val;
+    document.getElementById('sim-context').textContent = eq.ctx;
+
+    document.getElementById('sim-hours-back').textContent = fmtN(lostHoursYear) + ' hrs';
+    document.getElementById('sim-econ-back').textContent = fmtM(econCost) + '/yr';
+    document.getElementById('sim-riders-back').textContent = fmtN(affectedRiders) + ' riders';
+  }
+
+  simUpdate();
+})();
+
 </script>
