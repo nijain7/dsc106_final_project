@@ -739,9 +739,23 @@ const CAPITAL_COLORS = {
     const categories = [...new Set(capitalData.map(d => d.category))].sort();
   
     // Assign colors by category index
-    const catColorScale = d3.scaleOrdinal()
-      .domain(categories)
-      .range(d3.schemeTableau10.concat(d3.schemePastel1));
+    const PALETTE = [
+    '#c8963e', '#4a9eca', '#b07fd4', '#7bc67e',
+    '#e07b7b', '#a0c4e8', '#d4a0c8', '#e0a84a',
+    '#888888', '#6b7280', '#f59e0b', '#10b981'
+  ];
+
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+  }
+
+  const catColorScale = d3.scaleOrdinal()
+    .domain(categories)
+    .range(categories.map(cat => PALETTE[hashString(cat) % PALETTE.length]));
   
     // Store on window so treemap can use it
     window.capitalCatColorScale = catColorScale;

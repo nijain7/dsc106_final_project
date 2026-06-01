@@ -251,9 +251,8 @@ a { text-decoration: none; color: inherit; }
   margin: 0 !important;
 }
 
-/* ── FOOTER ───────────────────────────────────── */
 .site-footer {
-  background: #060f18;
+  background: var(--bg);
   border-top: 1px solid var(--border);
   padding: 28px 0;
 }
