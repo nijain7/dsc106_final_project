@@ -1428,3 +1428,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   observer.observe(car);
 })();
+
+document.getElementById('hero-arrow').addEventListener('click', () => {
+  document.querySelector('.article-body').scrollIntoView({
+    behavior: 'smooth'
+  });
+});
