@@ -1348,21 +1348,13 @@ const CAPITAL_COLORS = {
     simUpdate();
   
   })();
-
-// ===============================
-// FLIP CARD INTERACTION (ONE OPEN AT A TIME)
-// ===============================
-
+  
 function flipCard(card) {
-  const allCards = document.querySelectorAll(".flip-card");
-
-  // close all other cards
-  allCards.forEach(c => {
-    if (c !== card) {
-      c.classList.remove("flipped");
-    }
-  });
-
-  // toggle clicked card
   card.classList.toggle("flipped");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".flip-card").forEach(card => {
+    card.addEventListener("click", () => flipCard(card));
+  });
+});
