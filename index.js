@@ -458,6 +458,21 @@ function render() {
   }
 }
 
+function toggleSolution(card) {
+  const isOpen = card.classList.contains('active');
+
+  // close all cards first (storytelling behavior)
+  document.querySelectorAll('.clickable-card').forEach(c => {
+    c.classList.remove('active');
+    c.querySelector('.card-hint').textContent = 'Click to expand';
+  });
+
+  // reopen clicked one if it wasn't already open
+  if (!isOpen) {
+    card.classList.add('active');
+    card.querySelector('.card-hint').textContent = 'Click to collapse';
+  }
+}
 // ═══════════════════════════════════════════
 // SCROLLYTELLING
 // ═══════════════════════════════════════════
@@ -1333,3 +1348,21 @@ const CAPITAL_COLORS = {
     simUpdate();
   
   })();
+
+// ===============================
+// FLIP CARD INTERACTION (ONE OPEN AT A TIME)
+// ===============================
+
+function flipCard(card) {
+  const allCards = document.querySelectorAll(".flip-card");
+
+  // close all other cards
+  allCards.forEach(c => {
+    if (c !== card) {
+      c.classList.remove("flipped");
+    }
+  });
+
+  // toggle clicked card
+  card.classList.toggle("flipped");
+}
