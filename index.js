@@ -1372,3 +1372,59 @@ document.addEventListener("DOMContentLoaded", () => {
     card.addEventListener("click", () => flipCard(card));
   });
 });
+
+/* ── SUBWAY SEAT SCROLL ANIMATION + TOOLTIP ── */
+(function () {
+  const seats   = document.querySelectorAll('.subway-seat');
+  const tooltip = document.getElementById('seat-tooltip');
+  const ttDemo  = document.getElementById('seat-tt-demo');
+  const ttDesc  = document.getElementById('seat-tt-desc');
+
+  if (!seats.length) return;
+
+  // Hover tooltip
+  if (tooltip) {
+    seats.forEach(seat => {
+      seat.addEventListener('mouseenter', () => {
+        ttDemo.textContent = seat.dataset.demo || '';
+        ttDesc.textContent = seat.dataset.desc || '';
+        tooltip.classList.add('visible');
+      });
+      seat.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+    });
+  }
+
+  // Sequential scroll-triggered glow — loops continuously
+  let animationStarted = false;
+
+  function runAnimation() {
+    let i = 0;
+    function step() {
+      seats.forEach(s => s.classList.remove('seat-lit'));
+      if (i < seats.length) {
+        seats[i].classList.add('seat-lit');
+        i++;
+        setTimeout(step, 1600);
+      } else {
+        i = 0;
+        setTimeout(step, 2000);
+      }
+    }
+    step();
+  }
+
+  const car = document.querySelector('.subway-car-wrap');
+  if (!car) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !animationStarted) {
+      animationStarted = true;
+      runAnimation();
+      observer.disconnect();
+    }
+  }, { threshold: 0.1 });
+
+  observer.observe(car);
+})();

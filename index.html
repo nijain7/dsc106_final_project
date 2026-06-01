@@ -299,25 +299,67 @@
   </p>
 
 </section>mproving the existing system — not expanding it. Here's exactly where
-  
-  <!-- ═══════════════════════════════════════
-       SECTION 2 — EQUITY GAP (STUB)
-  ════════════════════════════════════════ -->
-  <section class="story-section" id="section-equity">
-    <div class="story-intro">
-      <div class="container">
-        <p class="article-tag">Section 3 of 5</p>
-        <h2 class="section-title">Who Gets Left Behind</h2>
-        <p class="section-lead">
-          About one in five New Yorkers struggle to pay for public transit —
-          a burden disproportionately borne by Black and Latino commuters and working mothers.
-        </p>
+
+<!-- ═══════════════════════════════════════
+     SECTION 2 — EQUITY GAP
+════════════════════════════════════════ -->
+<section class="story-section" id="section-equity">
+  <div class="story-intro">
+    <div class="container">
+      <p class="article-tag">Section 3 of 5</p>
+      <h2 class="section-title">Who Gets Left Behind</h2>
+      <p class="section-lead">
+        About one in five New Yorkers struggle to pay for public transit —
+        a burden disproportionately borne by Black and Latino commuters and working mothers.
+      </p>
+    </div>
+  </div>
+
+  <div class="subway-car-section container">
+    <div class="subway-car-wrap">
+
+      <div class="overhead-light-bar">
+        <div class="overhead-light-tube"></div>
       </div>
+
+      <div class="subway-car-interior">
+        <div class="seat-row">
+
+          <div class="subway-seat" id="equity-seat-1" data-demo="Black & Latino Commuters" data-desc="Black and Latino New Yorkers are disproportionately transit-dependent, often spending over 10% of income on fares with fewer car alternatives.">
+            <div class="seat-back-panel">
+              <span class="seat-label">BLACK &amp; LATINO<br>COMMUTERS</span>
+            </div>
+            <div class="seat-cushion-panel"></div>
+          </div>
+
+          <div class="subway-seat" id="equity-seat-2" data-demo="Working Mothers" data-desc="Working mothers make more trips per day than any other group and are hit hardest by service cuts and fare hikes.">
+            <div class="seat-back-panel">
+              <span class="seat-label">WORKING<br>MOTHERS</span>
+            </div>
+            <div class="seat-cushion-panel"></div>
+          </div>
+
+          <div class="subway-seat" id="equity-seat-3" data-demo="Students" data-desc="Students depend on transit to reach school — fare hikes push families toward chronic absenteeism.">
+            <div class="seat-back-panel">
+              <span class="seat-label">STUDENTS</span>
+            </div>
+            <div class="seat-cushion-panel"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="subway-floor-rail"></div>
     </div>
-    <div class="stub-viz container">
-      <div class="stub-box">👥 Demographic bubble chart — coming soon</div>
+
+    <div class="seat-tooltip" id="seat-tooltip">
+      <div class="seat-tooltip-demo" id="seat-tt-demo"></div>
+      <div class="seat-tooltip-desc" id="seat-tt-desc"></div>
     </div>
-  </section>
+
+    <p class="subway-car-caption">Hover a seat to learn more. Data: MTA Pulse Survey 2025; U.S. Census ACS.</p>
+  </div>
+</section>
 
   <!-- ═══════════════════════════════════════
      SECTION 4 — WHAT HAPPENS TO YOUR COMMUTE
