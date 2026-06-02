@@ -794,9 +794,7 @@ const CAPITAL_COLORS = {
   }
   
   // ── RENDER TREEMAP ──
-  
   function renderTreemap() {
-  
     if (!capitalSvg) return;
   
     const wrap = document.getElementById('treemap-container');
@@ -809,7 +807,6 @@ const CAPITAL_COLORS = {
       ? capitalData
       : capitalData.filter(d => d.agency === capitalActiveAgency);
   
-    // Group by category, sum budget
     const byCategory = d3.rollup(
       filtered,
       v => ({
@@ -831,13 +828,12 @@ const CAPITAL_COLORS = {
   
     d3.treemap()
       .size([W, H])
-      .padding(3)
+      .padding(4)
       .paddingTop(0)
       (root);
   
     const colorScale = window.capitalCatColorScale;
   
-    // ── DRAW CELLS ──
     capitalG.selectAll('.treemap-cell').remove();
   
     const cells = capitalG.selectAll('.treemap-cell')
@@ -845,36 +841,167 @@ const CAPITAL_COLORS = {
       .enter()
       .append('g')
       .attr('class', 'treemap-cell')
-      .attr('transform', d => `translate(${d.x0},${d.y0})`);
+      .attr('transform', d => `translate(${d.x0},${d.y0})`)
+      .style('opacity', 0)
+      .style('cursor', 'pointer');
   
+    // ── SUBWAY CAR BODY ──
     cells.append('rect')
+      .attr('class', 'car-body')
       .attr('width',  d => Math.max(0, d.x1 - d.x0))
       .attr('height', d => Math.max(0, d.y1 - d.y0))
       .attr('fill',   d => colorScale(d.data.name))
-      .attr('opacity', 0.85)
-      .attr('rx', 3)
+      .attr('rx', 6)
+      .attr('ry', 6)
+      .attr('opacity', 0.88);
+  
+    // ── METALLIC SHEEN (top highlight) ──
+    cells.each(function(d) {
+      const cellW = d.x1 - d.x0;
+      const cellH = d.y1 - d.y0;
+      if (cellW < 20 || cellH < 20) return;
+  
+      const g = d3.select(this);
+      const sheenId = 'sheen-' + d.data.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+  
+      // Add gradient sheen
+      const defs = capitalSvg.select('defs').empty()
+        ? capitalSvg.append('defs')
+        : capitalSvg.select('defs');
+  
+      if (defs.select('#' + sheenId).empty()) {
+        const grad = defs.append('linearGradient')
+          .attr('id', sheenId)
+          .attr('x1', '0%').attr('y1', '0%')
+          .attr('x2', '0%').attr('y2', '100%');
+        grad.append('stop')
+          .attr('offset', '0%')
+          .attr('stop-color', '#ffffff')
+          .attr('stop-opacity', 0.18);
+        grad.append('stop')
+          .attr('offset', '40%')
+          .attr('stop-color', '#ffffff')
+          .attr('stop-opacity', 0.04);
+        grad.append('stop')
+          .attr('offset', '100%')
+          .attr('stop-color', '#000000')
+          .attr('stop-opacity', 0.12);
+      }
+  
+      g.append('rect')
+        .attr('width',  cellW)
+        .attr('height', cellH)
+        .attr('rx', 6).attr('ry', 6)
+        .attr('fill', `url(#${sheenId})`)
+        .attr('pointer-events', 'none');
+  
+      // ── WINDOWS (only if tall/wide enough) ──
+      if (cellW > 60 && cellH > 50) {
+        const windowW  = Math.min(18, cellW * 0.12);
+        const windowH  = Math.min(12, cellH * 0.15);
+        const windowY  = cellH * 0.22;
+        const maxWins  = Math.floor((cellW - 16) / (windowW + 8));
+        const numWins  = Math.min(maxWins, 6);
+        const totalW   = numWins * windowW + (numWins - 1) * 8;
+        const startX   = (cellW - totalW) / 2;
+  
+        for (let i = 0; i < numWins; i++) {
+          g.append('rect')
+            .attr('x', startX + i * (windowW + 8))
+            .attr('y', windowY)
+            .attr('width',  windowW)
+            .attr('height', windowH)
+            .attr('rx', 3).attr('ry', 3)
+            .attr('fill', 'rgba(255,255,255,0.25)')
+            .attr('pointer-events', 'none');
+        }
+      }
+  
+      // ── DESTINATION SIGN (category label) ──
+      if (cellW > 40 && cellH > 30) {
+        const fmt = d.data.value >= 1000
+          ? '$' + (d.data.value / 1000).toFixed(1) + 'B'
+          : '$' + d.data.value.toFixed(0) + 'M';
+  
+        // Label background (destination board)
+        const labelH = 18;
+        const labelY = cellH - labelH - 6;
+        const labelW = cellW - 12;
+  
+        g.append('rect')
+          .attr('x', 6)
+          .attr('y', labelY)
+          .attr('width', labelW)
+          .attr('height', labelH)
+          .attr('rx', 3)
+          .attr('fill', 'rgba(0,0,0,0.35)')
+          .attr('pointer-events', 'none');
+  
+        // Category name in destination board
+        g.append('text')
+          .attr('x', cellW / 2)
+          .attr('y', labelY + 12)
+          .attr('fill', '#fff')
+          .attr('font-size', Math.min(10, cellW / 8) + 'px')
+          .attr('font-family', 'DM Sans, sans-serif')
+          .attr('font-weight', '600')
+          .attr('text-anchor', 'middle')
+          .attr('pointer-events', 'none')
+          .text(d.data.name)
+          .each(function() {
+            const maxW = labelW - 8;
+            const el = d3.select(this);
+            while (
+              this.getComputedTextLength &&
+              this.getComputedTextLength() > maxW &&
+              el.text().length > 3
+            ) {
+              el.text(el.text().slice(0, -4) + '…');
+            }
+          });
+  
+        // Dollar amount above destination board
+        if (cellH > 60) {
+          g.append('text')
+            .attr('x', cellW / 2)
+            .attr('y', labelY - 4)
+            .attr('fill', 'rgba(255,255,255,0.8)')
+            .attr('font-size', Math.min(13, cellW / 6) + 'px')
+            .attr('font-family', 'Playfair Display, serif')
+            .attr('font-weight', '600')
+            .attr('text-anchor', 'middle')
+            .attr('pointer-events', 'none')
+            .text(fmt);
+        }
+      }
+    });
+  
+    // ── HOVER INTERACTIONS ──
+    cells
       .on('mouseover', function(event, d) {
-        d3.select(this).attr('opacity', 1).attr('stroke', '#fff').attr('stroke-width', 1.5);
+        d3.select(this).select('.car-body')
+          .transition().duration(150)
+          .attr('opacity', 1)
+          .attr('filter', 'brightness(1.15)');
   
         const tt = document.getElementById('capital-tooltip');
         document.getElementById('capital-tt-category').textContent = d.data.name;
         document.getElementById('capital-tt-agency').textContent   = d.data.agency;
         document.getElementById('capital-tt-val').textContent =
-        d.data.value >= 1000
-          ? '$' + (d.data.value / 1000).toFixed(2) + 'B'
-          : '$' + d.data.value.toFixed(0) + 'M';
-  
+          d.data.value >= 1000
+            ? '$' + (d.data.value / 1000).toFixed(2) + 'B'
+            : '$' + d.data.value.toFixed(0) + 'M';
         tt.style.opacity = '1';
+  
         const rect = document.getElementById('treemap-container').getBoundingClientRect();
         tt.style.left = (event.clientX - rect.left + 14) + 'px';
         tt.style.top  = (event.clientY - rect.top  - 48) + 'px';
   
-        // Update callout
         document.getElementById('capital-callout-name').textContent  = d.data.name;
         document.getElementById('capital-callout-total').textContent =
-  d.data.value >= 1000
-    ? '$' + (d.data.value / 1000).toFixed(2) + 'B allocated'
-    : '$' + d.data.value.toFixed(0) + 'M allocated';
+          d.data.value >= 1000
+            ? '$' + (d.data.value / 1000).toFixed(2) + 'B allocated'
+            : '$' + d.data.value.toFixed(0) + 'M allocated';
         document.getElementById('capital-callout-desc').textContent =
           d.data.projects + ' project' + (d.data.projects !== 1 ? 's' : '');
         document.getElementById('capital-callout').style.display = 'flex';
@@ -886,55 +1013,42 @@ const CAPITAL_COLORS = {
         tt.style.top  = (event.clientY - rect.top  - 48) + 'px';
       })
       .on('mouseout', function() {
-        d3.select(this).attr('opacity', 0.85).attr('stroke', 'none');
+        d3.select(this).select('.car-body')
+          .transition().duration(150)
+          .attr('opacity', 0.88)
+          .attr('filter', null);
         document.getElementById('capital-tooltip').style.opacity = '0';
       });
   
-    // ── LABELS (only on cells big enough) ──
-    cells.each(function(d) {
-      const cellW = d.x1 - d.x0;
-      const cellH = d.y1 - d.y0;
-      if (cellW < 60 || cellH < 30) return;
-  
-      const g = d3.select(this);
-      const fmt = d.data.value >= 1000
-      ? '$' + (d.data.value / 1000).toFixed(1) + 'B'
-      : '$' + d.data.value.toFixed(0) + 'M';
-  
-      // Category name
-      g.append('text')
-        .attr('x', 8)
-        .attr('y', 18)
-        .attr('fill', '#fff')
-        .attr('font-size', cellW > 120 ? '12px' : '10px')
-        .attr('font-family', 'DM Sans, sans-serif')
-        .attr('font-weight', '500')
-        .style('pointer-events', 'none')
-        .text(d.data.name)
-        .each(function() {
-          // truncate if too wide
-          const maxW = cellW - 16;
-          let text = d3.select(this);
-          while (this.getComputedTextLength && this.getComputedTextLength() > maxW && text.text().length > 3) {
-            text.text(text.text().slice(0, -4) + '…');
-          }
-        });
-  
-      // Dollar amount
-      if (cellH > 50) {
-        g.append('text')
-          .attr('x', 8)
-          .attr('y', 34)
-          .attr('fill', 'rgba(255,255,255,0.65)')
-          .attr('font-size', '11px')
-          .attr('font-family', 'DM Sans, sans-serif')
-          .style('pointer-events', 'none')
-          .text(fmt);
-      }
-    });
-  
-    updateCapitalTotal();
+    // ── TRAIN ARRIVAL ANIMATION (left to right) ──
+const allCellNodes = cells.nodes();
+
+// Sort by x position so leftmost cells arrive first
+allCellNodes.sort((a, b) => {
+  return d3.select(a).datum().x0 - d3.select(b).datum().x0;
+});
+
+// Set starting position (off to the left, invisible)
+allCellNodes.forEach(node => {
+  const d = d3.select(node).datum();
+  d3.select(node)
+    .attr('transform', `translate(${d.x0 - 60}, ${d.y0})`)
+    .style('opacity', 0);
+});
+
+// Animate each cell into place with a staggered delay
+allCellNodes.forEach((node, i) => {
+  const d = d3.select(node).datum();
+  d3.select(node)
+    .transition()
+    .delay(i * 70)
+    .duration(500)
+    .ease(d3.easeCubicOut)
+    .attr('transform', `translate(${d.x0}, ${d.y0})`)
+    .style('opacity', 1);
+});
   }
+
   
   // Resize treemap on window resize
   window.addEventListener('resize', () => {

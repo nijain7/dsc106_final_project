@@ -1516,3 +1516,18 @@ input[type=range]::-moz-range-thumb {
   .seat-label { font-size: 10px; }
   .subway-car-interior { padding: 20px 16px 0; }
 }
+/* ═══════════════════════════════
+   CAPITAL PLAN — SUBWAY CAR CELLS
+═══════════════════════════════ */
+
+.treemap-cell {
+  transition: transform 0.15s ease;
+}
+
+.treemap-cell:hover {
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+
+.car-body {
+  transition: filter 0.15s ease;
+}
