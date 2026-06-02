@@ -1418,20 +1418,20 @@ allCellNodes.forEach((node, i) => {
         : '$' + (n / 1e6).toFixed(0) + 'M';
     }
   
-    function getEquiv(lostHours) {
-      const teachers = Math.round(lostHours / 1800);
-      if (teachers >= 100) {
-        return {
-          val: fmtN(teachers) + ' teacher-years',
-          ctx: 'The collective time lost equals ' + fmtN(teachers) + ' full teacher work-years every year.'
-        };
-      }
-      const marathons = Math.round(lostHours / 4.5);
-      return {
-        val: fmtN(marathons) + ' marathons worth of time',
-        ctx: 'Riders lose the equivalent of ' + fmtN(marathons) + ' marathon finishing times in extra waiting every year.'
-      };
-    }
+    // function getEquiv(lostHours) {
+    //   const teachers = Math.round(lostHours / 1800);
+    //   if (teachers >= 100) {
+    //     return {
+    //       val: fmtN(teachers) + ' teacher-years',
+    //       ctx: 'The collective time lost equals ' + fmtN(teachers) + ' full teacher work-years every year.'
+    //     };
+    //   }
+    //   const marathons = Math.round(lostHours / 4.5);
+    //   return {
+    //     val: fmtN(marathons) + ' marathons worth of time',
+    //     ctx: 'Riders lose the equivalent of ' + fmtN(marathons) + ' marathon finishing times in extra waiting every year.'
+    //   };
+    // }
   
     function simUpdate() {
       const cutRoutes = ROUTES.filter(r => cut.has(r.id));
@@ -1451,8 +1451,7 @@ allCellNodes.forEach((node, i) => {
       document.getElementById('sim-roi').style.display     = 'block';
   
       const affectedStops  = cutRoutes.reduce((s, r) => s + r.stops, 0);
-      const avgHeadway     = cutRoutes.reduce((s, r) => s + r.headway, 0) / nCut;
-      const waitIncrease   = avgHeadway / 2;
+      const waitIncrease = cutRoutes.reduce((s, r) => s + (r.headway / 2), 0);
       const affectedRiders = Math.round(DAILY_RIDERS * (affectedStops / TOTAL_STOPS) * 0.6);
   
       document.getElementById('sim-stops').textContent  = fmtN(affectedStops);
@@ -1461,16 +1460,16 @@ allCellNodes.forEach((node, i) => {
   
       const lostHoursYear = (affectedRiders * waitIncrease * 2 / 60) * 365;
       const econCost      = lostHoursYear * HOURLY_WAGE;
-      const eq            = getEquiv(lostHoursYear);
+      // const eq            = getEquiv(lostHoursYear);
   
       document.getElementById('sim-hours').textContent   = fmtN(lostHoursYear) + ' hrs';
       document.getElementById('sim-econ').textContent    = fmtM(econCost) + '/yr';
-      document.getElementById('sim-equiv').textContent   = eq.val;
-      document.getElementById('sim-context').textContent = eq.ctx;
+      // document.getElementById('sim-equiv').textContent   = eq.val;
+      // document.getElementById('sim-context').textContent = eq.ctx;
   
-      document.getElementById('sim-hours-back').textContent  = fmtN(lostHoursYear) + ' hrs';
-      document.getElementById('sim-econ-back').textContent   = fmtM(econCost) + '/yr';
-      document.getElementById('sim-riders-back').textContent = fmtN(affectedRiders) + ' riders';
+      // document.getElementById('sim-hours-back').textContent  = fmtN(lostHoursYear) + ' hrs';
+      // document.getElementById('sim-econ-back').textContent   = fmtM(econCost) + '/yr';
+      // document.getElementById('sim-riders-back').textContent = fmtN(affectedRiders) + ' riders';
     }
   
     simUpdate();
