@@ -3,7 +3,7 @@
 
 :root {
   /* BASE BACKGROUND (almost black, MTA-night feel) */
-  --bg:        #0f0f10;   /* near-black */
+  --bg:        #121212;   /* near-black */
   --panel:     #171717;   /* main cards / sections */
   --panel-2:   #202020;   /* hover / elevated surfaces */
 
@@ -29,7 +29,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 17px;
+  font-size: 20px;
   line-height: 1.75;
   color: var(--text);
   background: var(--bg);
@@ -72,7 +72,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .logo {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: 600;
   color: #fff;
@@ -179,7 +179,7 @@ a { text-decoration: none; color: inherit; }
 
 /* ── ARTICLE BODY ─────────────────────────────── */
 .article-body {
-  padding: 64px 0 96px;
+  padding: 250px 0 96px;
 }
 
 .article-body .container > * + * {
@@ -192,7 +192,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .article-body h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 28px;
   font-weight: 600;
   color: #fff;
@@ -259,7 +259,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .lead {
-  font-size: 19px;
+  font-size: 22px;
   font-weight: 300;
   line-height: 1.7;
   color: rgba(255,255,255,0.75);
@@ -304,7 +304,7 @@ a { text-decoration: none; color: inherit; }
 
 .callout p {
   color: rgba(255,255,255,0.8) !important;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.65;
   margin: 0 !important;
 }
@@ -427,7 +427,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .year-display {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: #fff;
@@ -476,10 +476,11 @@ input[type=range]::-moz-range-thumb {
   margin-top: 28px;
 }
 
+
 .chart-stat { position: absolute; top: 24px; right: 28px; text-align: right; }
 
 .chart-stat-num {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 26px;
   font-weight: 600;
   color: var(--accent);
@@ -517,10 +518,10 @@ input[type=range]::-moz-range-thumb {
 }
 
 .tooltip-month { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-.tooltip-val { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--accent); }
+.tooltip-val {font-size: 18px; color: var(--accent); }
 
 .upload-prompt { text-align: center; padding: 48px 24px; }
-.upload-prompt h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+.upload-prompt h3 {font-size: 20px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
 .upload-prompt p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
 
 .upload-btn-label {
@@ -581,7 +582,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 #year-display {
-  font-family: Georgia, serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 18px;
   font-weight: 600;
   color: var(--accent);
@@ -657,10 +658,13 @@ input[type=range]::-moz-range-thumb {
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: clamp(2rem, 5vw, 3.2rem);
   color: #f0e6d3;
   margin-bottom: 16px;
+}
+#section-intro .section-title {
+  line-height: 1;
 }
 
 .section-lead {
@@ -745,7 +749,7 @@ input[type=range]::-moz-range-thumb {
 .step-card--unlock .step-eyebrow { color: #5ecec8; }
 
 .step-card h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 1.25rem;
   color: #f0e6d3;
   margin: 0 0 10px;
@@ -855,7 +859,7 @@ input[type=range]::-moz-range-thumb {
 .capital-stat { margin-bottom: 16px; }
 
 .capital-stat-num {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 32px;
   font-weight: 600;
   color: var(--accent);
@@ -905,7 +909,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 .capital-tt-val {
-  font-family: 'Playfair Display', serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
   color: var(--accent);
 }
@@ -1545,4 +1549,7 @@ input[type=range]::-moz-range-thumb {
 
 .car-body {
   transition: filter 0.15s ease;
+}
+text {
+  font-family: Helvetica, Arial, sans-serif !important;
 }

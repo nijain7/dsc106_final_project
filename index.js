@@ -1543,7 +1543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 document.getElementById('hero-arrow').addEventListener('click', () => {
-  document.querySelector('.article-body').scrollIntoView({
+  document.querySelector('#section-intro').scrollIntoView({
     behavior: 'smooth'
   });
 });
